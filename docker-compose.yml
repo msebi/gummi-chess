@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:15 # Use a specific version of Postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=sebi
+      - POSTGRES_PASSWORD=sebi_test_4444
+      - POSTGRES_DB=chessdb-dev
+    ports:
+      - '5432:5432' # Expose the Postgres port to your local machine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer:latest
+    hostname: adminer
+    container_name: adminer
+    restart: always
+    ports:
+        - 8080:8080
+
+volumes:
+  postgres_data:

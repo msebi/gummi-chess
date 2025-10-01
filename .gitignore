@@ -32,6 +32,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.env
 
 # vercel
 .vercel
@@ -39,3 +40,71 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/generated/prisma
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Dependencies
+# ----------------------------------------------------------------
+# Avoid committing node_modules, as they can be reinstalled with 'npm install'.
+/node_modules
+
+# Build & Cache
+# ----------------------------------------------------------------
+# Next.js build output and cache folders.
+/.next/
+# Flow-bite react
+/.flowbite-react/
+/out/
+
+# Static site exports
+/build
+
+# Turbopack cache
+/.turbo/
+
+# Environment Variables
+# ----------------------------------------------------------------
+# These files contain secrets and should NEVER be committed to Git.
+# A .env.example file should be committed instead to show required variables.
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Logs
+# ----------------------------------------------------------------
+# Log files from various package managers.
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# System Files
+# ----------------------------------------------------------------
+# Ignore OS-specific files.
+.DS_Store
+Thumbs.db
+
+# Editor Directories
+# ----------------------------------------------------------------
+# Ignore editor-specific settings, but allow sharing of recommended extensions.
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea
+
+# Test & Coverage Reports
+# ----------------------------------------------------------------
+/coverage
+.nyc_output
+
+# Prisma
+# ----------------------------------------------------------------
+# Your generated Prisma client is often configured to be in node_modules,
+# but if you have a custom output path that isn't in .gitignore already, add it.
+# e.g., /generated
+# In your case, it seems to be in '/generated/prisma' which should be added.
+/generated/
