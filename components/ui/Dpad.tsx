@@ -9,6 +9,17 @@ type DpadProps = {
     className?: string; 
 };
 
+export const ControllerButton = ({ onClick, children } : { onClick: () => void; children: React.ReactNode}) => (
+    <button onClick={onClick} className="w-12 h-12 rounded-md bg-gray-700 
+                                        bg-gradient-to-b from-gray-600 to-gray-800 border-b-4 
+                                        border-black  text-gray-300 transition-all duration-100 
+                                        hover:brightness-125 active:border-b-0 active:translate-y-1 
+                                        active:brightness-90 focus:outline-none focus:ring-2 focus:ring-offset-2 
+                                        focus:ring-offset-gray-800 focus:ring-blue-400 ">
+        {children}
+    </button>
+); 
+
 // A single, reusable button component for our D-pad
 const DpadButton = ({
     direction,

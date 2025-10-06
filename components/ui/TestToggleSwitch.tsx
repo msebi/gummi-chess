@@ -1,4 +1,5 @@
 // pages/test-page.tsx
+// TODO: Imported toggle switch from flow bite. Delete this file
 import { useState } from 'react';
 import ToggleSwitch from '@/components/ui/ToggleSwitch';
 

@@ -1,3 +1,4 @@
+// TODO: Imported toggle switch from flow bite. Delete this file
 import React from 'react';
 
 

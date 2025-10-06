@@ -14,6 +14,8 @@ import stockfish from 'stockfish.js';
 // import TestToggleSwitch from './ui/TestToggleSwitch';
 
 import { ToggleSwitch} from 'flowbite-react';
+import TooltipIcon from './ui/TooltipIcon';
+import { LinePad } from './ui/LinePad';
 
 // You are using the older CommonJS require syntax. When a bundler like 
 // Webpack (or Turbopack) processes this, it often wraps the ES module in an 
@@ -38,21 +40,25 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
     const game = useMemo(() => new Chess(), []);
     // FEN string represents the board's position
     const [fen, setFen] = useState(initialFen || 'start');
-    const [boardFen, setBoardFen] = useState(fen); // FEN for what the user sees
+    const [analysisFen, setAnalysisFen] = useState(initialFen || 'start');
+    // FEN for what the user sees on the board
+    const [boardFen, setBoardFen] = useState(fen); 
 
     // Store analysis as an array of move arrays (e.g. [['e2e4', 'e7e5'], ['d2'd4']])
     const [analysisLines, setAnalysisLines] = useState<string[][]>([]);
-    const [selectedLineIndex, setSelectedLineIndex] = useState<number | null>(null);
+    const [selectedLineIndex, setSelectedLineIndex] = useState<number>(0);
     const [currentMoveIndex, setCurrentMoveIndex] = useState<number>(-1);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
     const [orientation, setOrientation] = useState<'white' | 'black'>('white');
     const engine = useRef<StockfishInstance | null>(null);
+    const analysisBoxRef = useRef<HTMLDivElement>(null);
     
     // Sync internal FEN state with the prop from the parent
     useEffect(() => {
         //  This updates the visual board's state. It's safe
         // to use here
         setFen(initialFen || 'start');        
+        setAnalysisFen(initialFen || 'start');
         setBoardFen(initialFen || 'start');
         if (initialFen && initialFen !== 'start') {            
             game.load(initialFen || 'start');
@@ -60,7 +66,7 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
             game.reset();
         }
         setAnalysisLines([]);
-        setSelectedLineIndex(null);
+        setSelectedLineIndex(0);
         setCurrentMoveIndex(-1);
     }, [initialFen, game]);
 
@@ -100,10 +106,39 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
         };
     }, []); // Run only on mount
 
+    // Handler to enforce legal moves on the board
+    const onPieceDrop = (sourceSquare: string, targetSquare: string) => {
+        // Operate on current position
+        const gameCopy = new Chess(boardFen);
+        try {
+            const move = gameCopy.move({
+                from: sourceSquare,
+                to: targetSquare,
+                promotion: 'q', // Promote to queen always
+            });
+
+            // If the move is illegal, chess.js will throw an error
+            if (move === null) {
+                return false; 
+            }
+
+            const newFen = gameCopy.fen();
+            // If move legal, update FEN state
+            setFen(newFen);
+            setBoardFen(newFen);
+            setAnalysisFen(newFen);
+            setAnalysisLines([]);
+            return true;
+        } catch (error) {
+            console.log("Invalid move:", error);
+            return false; 
+        }
+    };
+
     const handleAnalyzePosition = () => {
         if (!engine.current) return;
         setAnalysisLines([]);
-        setSelectedLineIndex(null);
+        setSelectedLineIndex(0);
         setCurrentMoveIndex(-1);
         setIsAnalyzing(true);
 
@@ -119,86 +154,83 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
         // }, 20000); // 20 seconds
     };
 
+    const handleLineSelection = (index: number) => {
+        setSelectedLineIndex(index);
+        setCurrentMoveIndex(-1);
+        // Reset board to base fen when selecting a new line
+        setBoardFen(analysisFen);
+
+        // Reorder lines to bring the selected one to the top
+        setAnalysisLines(prev => {
+            if (!prev[index]) return prev;
+            const newOrder = [prev[index], ...prev.slice(0, index), ...prev.slice(index + 1)];
+            return newOrder;
+        });
+
+        // The selected index is now 0 after reordering
+        setSelectedLineIndex(0);
+    };
+
     const navigateMove = (direction: 'forward' | 'backward') => {
-        if (selectedLineIndex === null || !analysisLines[selectedLineIndex]) 
+        if (analysisLines.length === 0) 
             return;
-        
+
         const line = analysisLines[selectedLineIndex];
         let newMoveIndex = currentMoveIndex;
 
-        if (direction === 'forward' && newMoveIndex < line.length -1) {
+        if (direction === 'forward' && newMoveIndex < line.length - 1) {
             newMoveIndex++;
-        } else if (direction === 'backward' && currentMoveIndex > -1) {
+        } else if (direction === 'backward' && newMoveIndex > -1) {
             newMoveIndex--;
+        } else if (direction === 'backward' && newMoveIndex === -1) {
+            return; // Can't go back further
         } else {
-            return; // End or beginning of attack line
+            // Reset if going back from the first move
+            newMoveIndex = -1;
         }
 
         // Reset to the base position and apply moves up to the new index
-        const tempGame = new Chess(fen);
+        const tempGame = new Chess(analysisFen);
         for (let i = 0; i <= newMoveIndex; i++) {
             tempGame.move(line[i]);
         }
+
         setCurrentMoveIndex(newMoveIndex);
         setBoardFen(tempGame.fen());
-        // TODO: 
-        // Update the visual board, but not the base FEN for analysis
-        // This requires a new state variable        
     };
 
-    // When a line is selected, reset the board view to the base FEN
-    useEffect(() => {
-        if (selectedLineIndex !== null) {
-            setCurrentMoveIndex(-1);
-            setBoardFen(fen);
+    const navigateLine = (direction: 'up' | 'down') => {
+        if (analysisLines.length === 0) return;
+        let newIndex = selectedLineIndex;
+        if (direction === 'up') {
+            newIndex = (selectedLineIndex - 1 + analysisLines.length) % analysisLines.length;
+        } else {
+            newIndex = (selectedLineIndex + 1) % analysisLines.length;
         }
-    }, [selectedLineIndex, fen]);
-
-    // TODO: a more robust implementation would use a separate state for the displayed
-    // FEN vs the analysis FEN to avoid confusion. This is a simplified version.
-    // For now, navigating moves will not update the main board to keep it simple. 
-
-    const [lastPressed, setLastPressed] = useState<string>('none');
-
-    const handleDpadClick = (direction: string) => {
-        console.log(`D-pad button pressed: ${direction}`);
-        setLastPressed(direction);
-        switch(direction) {
-            case 'up':
-                setSelectedLineIndex(p => (p === null || p <= 0) ? analysisLines.length - 1 : p - 1);
-                return; 
-            case 'left':
-                navigateMove('backward');
-                return;
-            case 'right':
-                navigateMove('forward');
-                return;
-            case 'down':
-                setSelectedLineIndex(p => (p === null || p >= analysisLines.length - 1) ? 0 : p + 1);
-                return;
-            default:
-                console.log(`Invalid direction: ${direction}`);
-        }
+        handleLineSelection(newIndex);
     };
 
     // Switch players toggle button
     const [isToggled, setIsToggled] = useState(false);
 
     return (
-        <div className="p-4">
-            <Chessboard position={boardFen} boardOrientation={orientation} />
-            <div className="mt-2 text-sm text-gray-500">
-                Set FEN Position
+        <div className="p-4 flex flex-col gap-4">
+            <Chessboard position={boardFen} boardOrientation={orientation}  onPieceDrop={onPieceDrop} />
+
+            <div>
+                <label htmlFor="fenInput" className="block text-sm font-medium text-gray-600">
+                    Set FEN Position
+                </label>
+                <input type="text" id="fenInput" value={boardFen} onChange={(e) => { 
+                    setFen(e.target.value); setBoardFen(e.target.value) }}
+                    className="mt-1 block w-full rounded-md border-gray-200 shadow-sm"
+                />
             </div>
-            <input 
-                type="text"
-                value={fen}
-                onChange={(e) => setFen(e.target.value)}
-                className="mt-1 block w-full rounded-md border-gray-200 shadow-sm"
-            />
+
+
 
             <div className="flex justify-center items-center mt-4 gap-4">
-                <Dpad onButtonClick={handleDpadClick} />
+                <LinePad onButtonClick={handleDpadClick} />
             </div>
 
             <button 
@@ -258,30 +290,6 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
             </div>
         </div>
     );
-
-    const onPieceDrop = (sourceSquare: string, targetSquare: string) => {
-        try {
-            const move = game.move({
-                from: sourceSquare,
-                to: targetSquare,
-                promotion: 'q', // Promote to queen always
-            });
-
-            // If the move is illegal, chess.js will throw an error
-            if (move === null) {
-                return false; 
-            }
-
-            // If move legal, update FEN state
-            setFen(game.fen())
-
-            return true;
-        } catch (error) {
-            console.log("Invalid move:", error);
-            return false; 
-        }
-    };
-
  
     // useEffect() here keeps the chess.js engine in sync when the FEN is changed manually
     // useEffect(() => {
