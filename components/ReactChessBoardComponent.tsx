@@ -3,7 +3,7 @@ import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 // TODO: define stockfish type
 // import { type StockfishInstance } from '@/types/stockfish';
-import { Dpad } from './ui/Dpad';
+import { ControllerButton, Dpad } from './ui/Dpad';
 
 
 // The stockfish.js might not have default TypeScript types, use a require 
@@ -227,119 +227,60 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
                 />
             </div>
 
-
-
-            <div className="flex justify-center items-center mt-4 gap-4">
-                <LinePad onButtonClick={handleDpadClick} />
+            {/* Control Rows */}
+            <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                    <TooltipIcon tooltipText="Navigate FEN positions from the video."/>
+                    <ControllerButton onClick={() => {}}>{'^'}</ControllerButton>
+                    <ControllerButton onClick={() => {}}>{'v'}</ControllerButton>
+                    <ControllerButton onClick={() => {}}>{'<'}</ControllerButton>
+                    <ControllerButton onClick={() => {}}>{'>'}</ControllerButton>
+                </div>
+                <div className="flex items-center gap-2">
+                    <TooltipIcon tooltipText="Use these controls to navigate the analysis lines below."/>
+                    <ControllerButton onClick={() => navigateLine('up')}>{'^'}</ControllerButton>
+                    <ControllerButton onClick={() => navigateLine('down')}>{'v'}</ControllerButton>
+                    <ControllerButton onClick={() => navigateMove('backward')}>{'<'}</ControllerButton>
+                    <ControllerButton onClick={() => navigateMove('forward')}>{'>'}</ControllerButton>
+                </div>
             </div>
 
-            <button 
-                onClick={handleAnalyzePosition} 
-                disabled={isAnalyzing} 
-                className="mt-4 w-full bg-blue-300 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400">
-                Analyze Position
+            <button onClick = {handleAnalyzePosition} disabled={isAnalyzing} 
+                    className="w-full bg-blue-400 hover:bg-blue-600 
+                         text-white font-bold py-2 px-4 rounded disabled:bg-gray-300">
+                {isAnalyzing ? 'Analyzing...' : 'Analyze Position'}
             </button>
 
-            <div className="mt-4">
+            <div className="flex items-center justify-between">
+                <span className="font-bold">Flip Board:</span>
+                <ToggleSwitch checked={isToggled} onChange={setIsToggled} />
+            </div>
+
+            <div>
                 <h3 className="font-bold">Attack Lines:</h3>
-                <div className="border rounded-md bg-white mt-2 h-40 overflow-y-auto">
+                <div ref={analysisBoxRef} className="border rounded-md bg-white mt-2 h-40 overflow-y-auto">
                     {analysisLines.map((line, index) => (
                         <div
                             key={index}
-                            onClick={() => { 
-                                setSelectedLineIndex(index);                                 
-                            }}
-                            className={`p-2 cursor-pointer ${selectedLineIndex === index ? 'bg-blue-100' : ''}`}
+                            onClick={() => handleLineSelection(index)}
+                            className={`p-2 cursor-pointer font-mono text-xs 
+                                        ${selectedLineIndex === index ? 'bg-blue-200' : ''}`}
                         >
-                            <span className="font-bold mr-2">{index + 1}.</span>
-                            {line.map((move, moveIdx) => (
-                                <span key={moveIdx} className={selectedLineIndex === index && currentMoveIndex === moveIdx ? 'font-bold text-red-500' : ''}>
-                                    {move}{' '}
-                                </span>
-                            ))}
+                        <span className="font-bold mr-2 text-gray-500">{index + 1}.</span>
+                        {line.map((move, moveIdx) => (
+                            <span key={moveIdx} className={selectedLineIndex === index && currentMoveIndex === moveIdx ? 'font-bold text-red-600 underline' : ''}>
+                            {move}{' '}
+                            </span>
+                        ))}
                         </div>
                     ))}
                 </div>
             </div>
-
-            <ToggleSwitch checked={isToggled} onChange={setIsToggled} />
-            {/* <TestToggleSwitch /> */}
-            <div className="mt-4 flex items-center justify-between">
-                    <span className="font-bold">Flip Board:</span>
-                    <label className="inline-flex items-center cursor-pointer">
-                        {/* <ToggleSwitch 
-                            id="switch-players"
-                            checked={isToggled}
-                            onChange={
-                                (e) => {
-                                    setIsToggled(e.target.checked);
-                                    setOrientation(o => o === 'white' ? 'black' : 'white');
-                                }
-                            }
-                        /> */}
-                        {/* <input type="checkbox" className="sr-only peer" onChange={() => setOrientation(o => o === 'white' ? 'black' : 'white')} />
-                        <div className="relative w-11 h-6 bg-gray-100 rounded-full peer 
-                                        peer-checked:after: translate-x-full 
-                                        peer-checked:after:border-white after:content-[''] 
-                                        after:absolute after:top-0.5 after:start-[2px] 
-                                        after:bg-white after:border-gray-200 after:border 
-                                        after:rounded-full after:h-5 after:w-5 after:transition-all 
-                                        peer-checked:bg-blue-500">                            
-                        </div> */}
-                    </label>
-            </div>
+            
         </div>
     );
  
-    // useEffect() here keeps the chess.js engine in sync when the FEN is changed manually
-    // useEffect(() => {
-    //     try {
-    //         game.load(fen);
-    //     } catch (error) {
-    //         console.log(`Error invalid FEN: ${fen}. Error: ${error}`, fen, error);
-    //     }
-    // }, [fen, game]);
-
-    // return (
-    //     <div className="p-4">
-    //         <Chessboard
-    //             position={fen}
-    //             onPieceDrop={onPieceDrop}
-    //             arePiecesDraggable={true} 
-    //         />
-
-    //         <div className="mt-2">
-    //             <label htmlFor="fenInput" className="block text-sm font-medium text-gray-700">
-    //                 Set Fen Position
-    //             </label>
-    //             <input 
-    //                 type="text"
-    //                 id="fenInput"
-    //                 value={fen}
-    //                 onChange={(e) => setFen(e.target.value)}
-    //                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-400 focus:ring-indigo-400 sm:text-sm"
-    //             />
-    //         </div>
-
-    //         <div className="mt-4 p-4 border bg-gray-50 rounded h-48 font-mono text-sm overflow-y-auto">
-    //             <h3 className="font-sans font-bold text-lg mb-2">
-    //                 Stockfish Analysis 
-    //             </h3>
-    //             {isAnalyzing && <p>Analyzing...</p>}
-    //             {analysis.map((line, index) => (
-    //                 <p key={index} className="whitespace-pre-wrap text-xs">{line}</p>
-    //             ))}
-    //         </div>
-
-    //         <button 
-    //             onClick={handleAnalyzePosition}
-    //             disabled={isAnalyzing}
-    //             className="mt-4 w-full bg-blue-300 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400"
-    //         >
-    //             {isAnalyzing ? 'Analyzing...' : 'Analyze Position'}
-    //         </button>
-    //     </div>
-    // );
+    
 };
 
 export default ReactChessBoardComponent;
