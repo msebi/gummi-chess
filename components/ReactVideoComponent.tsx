@@ -9,13 +9,17 @@ type ReactVideoComponentProps = {
     tags: { tag: { name: string } }[];
     keyPositions: KeyPosition[];
     onSetFen: (fen: string | null) => void; // Function from parent
+    activePositionIndex: number | null; // Receives the active index
+    onSelectPosition: (index: number) => void; // Function to call when an item is clicked
 };
 
 const ReactVideoComponent: React.FC<ReactVideoComponentProps> = ({ 
     videoUrl, 
     tags, 
     keyPositions, 
-    onSetFen 
+    onSetFen,
+    activePositionIndex, 
+    onSelectPosition,
 }) => {
     const [selectedFen, setSelectedFen] = useState<string | null>(null);
     const [showTooltip, setShowTooltip] = useState(false);
@@ -86,10 +90,11 @@ const ReactVideoComponent: React.FC<ReactVideoComponentProps> = ({
                 <h3 className="font-bold text-lg mb-2">Key Positions in Video</h3>
                 {/* TODO: edit styles */}
                 <div className="border rounded-md bg-white">
-                    {keyPositions.map((pos) => (
+                    {keyPositions.map((pos, index) => (
                         <div
                             key={pos.id}
                             onClick={() => {
+                                onSelectPosition(index)
                                 setSelectedFen(pos.fen)
                                 setShowTooltip(false);
                             }}
@@ -109,10 +114,10 @@ const ReactVideoComponent: React.FC<ReactVideoComponentProps> = ({
                     <ActionTooltip isOpen={showTooltip} onClose={() => setShowTooltip(false)}>
                         Please select a FEN string from the list above before sending it to the board. 
                     </ActionTooltip>
-                    <LeftRightPad onButtonClick={handleLeftRightClick} />                    
+                    {/* TODO: these buttons are no longer needed since their function is now in the ReactChessBoardComponent.tsx */}
+                    {/* <LeftRightPad onButtonClick={handleLeftRightClick} />                     */}
                 </div>
             </div>
-
         </div>        
     );
 };

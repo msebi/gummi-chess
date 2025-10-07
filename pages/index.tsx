@@ -80,7 +80,7 @@ export default function HomePage({ courses }: InferGetStaticPropsType<typeof get
         </FadeInOnScroll>
 
         <FadeInOnScroll>
-          <ReactCourseContainerComponent title="Free Courses" courses={courseProps} />
+          <ReactCourseContainerComponent title="Courses" courses={courseProps} />
         </FadeInOnScroll>
 
         <FadeInOnScroll>

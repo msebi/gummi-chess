@@ -27,8 +27,12 @@ interface StockfishInstance {
   terminate: () => void;
 }
 
+type ReactChessBoardComponentProps = {
+    initialFen: string | null;
+    onFenNavigate: (direction: 'up' | 'down' | 'left' | 'right') => void;
+};
 
-const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ initialFen }) => {
+const ReactChessBoardComponent: React.FC<ReactChessBoardComponentProps> = ({ initialFen, onFenNavigate }) => {
     // useMemo ensures that the chess.js instance is created only once
     const game = useMemo(() => new Chess(), []);
     // FEN string represents the board's position
@@ -231,16 +235,27 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
         handleLineSelection(newIndex);
     };
 
-    // Handler for FEN navigation buttons
-    const handleFenNavigation = (direction: string) => {
-        console.log(`FEN navigation: ${direction}`);
-    };
-
     const handleBoardSwitch = () => {
         setIsToggled(!isToggled);
         setOrientation(o => o === 'white' ? 'black' : 'white');
     };
 
+    const handleAnalysisDpad = (direction: string) => {
+        switch (direction) {
+            case 'up': 
+                navigateLine('up'); 
+                break; 
+            case 'down':
+                navigateLine('down');
+                break;
+            case 'backward': 
+                navigateMove('backward');
+                break;
+            case 'forward':
+                navigateMove('forward');
+                break;
+        }
+    };
 
     // Switch players toggle button
     const [isToggled, setIsToggled] = useState(false);
@@ -268,32 +283,32 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
                 {/* This div now acts as the alignment container for the buttons */}
                 <div className="flex flex-col items-center gap-3">
                 
-                {/* Row 1: FEN Navigation */}
-                <div className="relative flex items-center">
-                    {/* The Tooltip is positioned absolutely relative to this container */}
-                    <div className="absolute right-full mr-2">
-                    <TooltipIcon tooltipText="Navigate FEN positions from the video." />
+                    {/* Row 1: FEN Navigation */}
+                    <div className="relative flex items-center">
+                        {/* The Tooltip is positioned absolutely relative to this container */}
+                        <div className="absolute right-full mr-2">
+                            <TooltipIcon tooltipText="Navigate FEN positions from the video." />
+                        </div>
+                        <div className="flex gap-2">
+                            <ControlButton onClick={() => onFenNavigate('up')}>{arrowUp}</ControlButton>
+                            <ControlButton onClick={() => onFenNavigate('down')}>{arrowDown}</ControlButton>
+                            <ControlButton onClick={() => onFenNavigate('left')}>{arrowLeft}</ControlButton>
+                            <ControlButton onClick={() => onFenNavigate('right')}>{arrowRight}</ControlButton>
+                        </div>
                     </div>
-                    <div className="flex gap-2">
-                    <ControlButton onClick={() => handleFenNavigation('up')}>{arrowUp}</ControlButton>
-                    <ControlButton onClick={() => handleFenNavigation('down')}>{arrowDown}</ControlButton>
-                    <ControlButton onClick={() => handleFenNavigation('left')}>{arrowLeft}</ControlButton>
-                    <ControlButton onClick={() => handleFenNavigation('right')}>{arrowRight}</ControlButton>
-                    </div>
-                </div>
 
-                {/* Row 2: Analysis Navigation */}
-                <div className="relative flex items-center">
-                    <div className="absolute right-full mr-2">
-                    <TooltipIcon tooltipText="Use these controls to navigate the analysis lines below." />
+                    {/* Row 2: Analysis Navigation */}
+                    <div className="relative flex items-center">
+                        <div className="absolute right-full mr-2">
+                            <TooltipIcon tooltipText="Use these controls to navigate the analysis lines below." />
+                        </div>
+                        <div className="flex gap-2">
+                            <ControlButton onClick={() => handleAnalysisDpad('up')}>{arrowUp}</ControlButton>
+                            <ControlButton onClick={() => handleAnalysisDpad('down')}>{arrowDown}</ControlButton>
+                            <ControlButton onClick={() => handleAnalysisDpad('backward')}>{arrowLeft}</ControlButton>
+                            <ControlButton onClick={() => handleAnalysisDpad('forward')}>{arrowRight}</ControlButton>
+                        </div>
                     </div>
-                    <div className="flex gap-2">
-                    <ControlButton onClick={() => navigateLine('up')}>{arrowUp}</ControlButton>
-                    <ControlButton onClick={() => navigateLine('down')}>{arrowDown}</ControlButton>
-                    <ControlButton onClick={() => navigateMove('backward')}>{arrowLeft}</ControlButton>
-                    <ControlButton onClick={() => navigateMove('forward')}>{arrowRight}</ControlButton>
-                    </div>
-                </div>
                 </div>
 
                 {/* Analyze Position Button */}
@@ -311,7 +326,7 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
                 <ToggleSwitch 
                     id="flip-board-toggle" 
                     checked={orientation === 'black'} 
-                    onChange={() => setOrientation(o => o === 'white' ? 'black' : 'white')} 
+                    onChange={handleBoardSwitch} 
                 />
                 </div>
             </div>      
@@ -328,7 +343,7 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
                         >
                         <span className="font-bold mr-2 text-gray-500">{index + 1}.</span>
                         {line.map((move, moveIdx) => (
-                            <span key={moveIdx} className={selectedLineIndex === index && currentMoveIndex === moveIdx ? 'font-bold text-blue-900 underline' : ''}>
+                            <span key={moveIdx} className={selectedLineIndex === index && currentMoveIndex === moveIdx ? 'font-extrabold text-blue-900 underline' : ''}>
                             {move}{' '}
                             </span>
                         ))}
