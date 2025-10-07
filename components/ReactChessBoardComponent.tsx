@@ -261,34 +261,60 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
                 />
             </div>
 
-            {/* Control Rows */}
-            <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                    <TooltipIcon tooltipText="Navigate FEN positions from the video."/>
+            {/* This centers the control buttons, the analyze button as well as the switch board position 
+            button */}
+            <div className="flex flex-col items-center gap-4 mt-4">
+
+                {/* This div now acts as the alignment container for the buttons */}
+                <div className="flex flex-col items-center gap-3">
+                
+                {/* Row 1: FEN Navigation */}
+                <div className="relative flex items-center">
+                    {/* The Tooltip is positioned absolutely relative to this container */}
+                    <div className="absolute right-full mr-2">
+                    <TooltipIcon tooltipText="Navigate FEN positions from the video." />
+                    </div>
+                    <div className="flex gap-2">
                     <ControlButton onClick={() => handleFenNavigation('up')}>{arrowUp}</ControlButton>
                     <ControlButton onClick={() => handleFenNavigation('down')}>{arrowDown}</ControlButton>
                     <ControlButton onClick={() => handleFenNavigation('left')}>{arrowLeft}</ControlButton>
                     <ControlButton onClick={() => handleFenNavigation('right')}>{arrowRight}</ControlButton>
+                    </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    <TooltipIcon tooltipText="Use these controls to navigate the analysis lines below."/>
+
+                {/* Row 2: Analysis Navigation */}
+                <div className="relative flex items-center">
+                    <div className="absolute right-full mr-2">
+                    <TooltipIcon tooltipText="Use these controls to navigate the analysis lines below." />
+                    </div>
+                    <div className="flex gap-2">
                     <ControlButton onClick={() => navigateLine('up')}>{arrowUp}</ControlButton>
                     <ControlButton onClick={() => navigateLine('down')}>{arrowDown}</ControlButton>
                     <ControlButton onClick={() => navigateMove('backward')}>{arrowLeft}</ControlButton>
                     <ControlButton onClick={() => navigateMove('forward')}>{arrowRight}</ControlButton>
+                    </div>
                 </div>
-            </div>
+                </div>
 
-            <button onClick = {handleAnalyzePosition} disabled={isAnalyzing} 
-                    className="w-full bg-blue-400 hover:bg-blue-600 
-                         text-white font-bold py-2 px-4 rounded disabled:bg-gray-300">
+                {/* Analyze Position Button */}
+                <button
+                onClick={handleAnalyzePosition}
+                disabled={isAnalyzing}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400"
+                >
                 {isAnalyzing ? 'Analyzing...' : 'Analyze Position'}
-            </button>
+                </button>
 
-            <div className="flex items-center justify-between">
+                {/* Flip Board Toggle */}
+                <div className="flex items-center gap-2">
                 <span className="font-bold">Flip Board:</span>
-                <ToggleSwitch checked={isToggled} onChange={handleBoardSwitch} />
-            </div>
+                <ToggleSwitch 
+                    id="flip-board-toggle" 
+                    checked={orientation === 'black'} 
+                    onChange={() => setOrientation(o => o === 'white' ? 'black' : 'white')} 
+                />
+                </div>
+            </div>      
 
             <div>
                 <h3 className="font-bold">Attack Lines:</h3>
@@ -302,7 +328,7 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
                         >
                         <span className="font-bold mr-2 text-gray-500">{index + 1}.</span>
                         {line.map((move, moveIdx) => (
-                            <span key={moveIdx} className={selectedLineIndex === index && currentMoveIndex === moveIdx ? 'font-bold text-red-600 underline' : ''}>
+                            <span key={moveIdx} className={selectedLineIndex === index && currentMoveIndex === moveIdx ? 'font-bold text-blue-900 underline' : ''}>
                             {move}{' '}
                             </span>
                         ))}
