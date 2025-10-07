@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Define directions for type safety
-type LinePadDirection = 'up' | 'down' | 'left' | 'right';
+export type LinePadDirection = 'up' | 'down' | 'left' | 'right';
 
 // Define the component's props
 type LinePadProps = {
@@ -9,7 +9,6 @@ type LinePadProps = {
     className?: string; 
 };
 
-// A single, reusable button component for our D-pad
 const LinePadButton = ({
     direction,
     shape,
@@ -25,13 +24,13 @@ const LinePadButton = ({
             className={`
                 flex items-center justify-center
                 w-12 h-12 
-                bg-gray-700 bg-gradient-to-b from-gray-600 to-gray-800 
+                bg-gray-600 bg-gradient-to-b from-gray-500 to-gray-700 
                 border-b-4 border-black 
                 text-gray-300 
                 transition-all duration-100 
                 hover:brightness-125
                 active:border-b-0 active:translate-y-1 active:brightness-90
-                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-blue-400 
+                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-700 focus:ring-blue-400 
                 rounded-lg 
             `}
             aria-label={`Direction ${direction}`}
@@ -54,10 +53,7 @@ export const LinePad: React.FC<LinePadProps> = ({ onButtonClick, className = ''}
             <div className="col-start-1 row-start-1"></div>
             <div className="col-start-2 row-start-1"></div>
             <div className="col-start-3 row-start-1"></div>
-            <div className="col-start-4 row-start-3"></div>
-
-            {/* Center piece */}
-            {/* <div className="bg-gray-700"></div> */}
+            <div className="col-start-4 row-start-1"></div>
 
             {/* Directional Buttons all in one line to save screen space. */}
             <div className="col-start-1 row-start-1">

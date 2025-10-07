@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import YouTube from 'react-youtube';
 import { KeyPosition } from '../generated/prisma/client';
-import { LeftRightPad } from './ui/Dpad';
+import { LeftRightPad } from './ui/ui-controllers/Dpad';
 import ActionTooltip from './ui/ActionTooltip';
 
 type ReactVideoComponentProps = {

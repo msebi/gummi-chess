@@ -3,19 +3,13 @@ import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 // TODO: define stockfish type
 // import { type StockfishInstance } from '@/types/stockfish';
-import { ControllerButton, Dpad } from './ui/Dpad';
-
-
 // The stockfish.js might not have default TypeScript types, use a require 
 import stockfish from 'stockfish.js';
 
-// TODO: cleanup
-// import ToggleSwitch from './ui/ToggleSwitch';
-// import TestToggleSwitch from './ui/TestToggleSwitch';
 
 import { ToggleSwitch} from 'flowbite-react';
 import TooltipIcon from './ui/TooltipIcon';
-import { LinePad } from './ui/LinePad';
+import { ControlButton } from './ui/ui-controllers/ControlButton';
 
 // You are using the older CommonJS require syntax. When a bundler like 
 // Webpack (or Turbopack) processes this, it often wraps the ES module in an 
@@ -33,7 +27,6 @@ interface StockfishInstance {
   terminate: () => void;
 }
 
-type AttackLine = string[];
 
 const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ initialFen }) => {
     // useMemo ensures that the chess.js instance is created only once
@@ -53,6 +46,12 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
     const engine = useRef<StockfishInstance | null>(null);
     const analysisBoxRef = useRef<HTMLDivElement>(null);
     
+    // SVG definitions for arrows
+    const arrowUp = <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M7 14l5-5 5 5z"/></svg>;
+    const arrowDown = <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>;
+    const arrowLeft = <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M14 7l-5 5 5 5z"/></svg>;
+    const arrowRight = <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M10 17l5-5-5-5z"/></svg>;
+
     // Sync internal FEN state with the prop from the parent
     useEffect(() => {
         //  This updates the visual board's state. It's safe
@@ -160,22 +159,41 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
         // Reset board to base fen when selecting a new line
         setBoardFen(analysisFen);
 
+        // TODO: Remove?
         // Reorder lines to bring the selected one to the top
-        setAnalysisLines(prev => {
-            if (!prev[index]) return prev;
-            const newOrder = [prev[index], ...prev.slice(0, index), ...prev.slice(index + 1)];
-            return newOrder;
-        });
+        // setAnalysisLines(prev => {
+        //     if (!prev[index]) return prev;
+        //     const newOrder = [prev[index], ...prev.slice(0, index), ...prev.slice(index + 1)];
+        //     return newOrder;
+        // });
 
         // The selected index is now 0 after reordering
-        setSelectedLineIndex(0);
+        // setSelectedLineIndex(0);
     };
+
+    // TODO: remove
+    // const navigate = (direction: LinePadDirection) => {
+    //     if (direction === 'left' || direction === 'right') {
+    //         navigateMove(direction);
+    //         return;
+    //     }
+
+    //     if (direction === 'up' || direction === 'down') {
+    //         navigateLine(direction);
+    //         return;
+    //     }
+
+    //     console.log(`Invalid direction of clicked button controller: ${direction}`);
+    //     throw new Error(`Invalid direction of clicked button controller: ${direction}`);
+    // };
 
     const navigateMove = (direction: 'forward' | 'backward') => {
         if (analysisLines.length === 0) 
             return;
 
         const line = analysisLines[selectedLineIndex];
+        if (!line) 
+            return;
         let newMoveIndex = currentMoveIndex;
 
         if (direction === 'forward' && newMoveIndex < line.length - 1) {
@@ -190,6 +208,9 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
         }
 
         // Reset to the base position and apply moves up to the new index
+        if (analysisFen === 'start') {
+            setAnalysisFen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        }            
         const tempGame = new Chess(analysisFen);
         for (let i = 0; i <= newMoveIndex; i++) {
             tempGame.move(line[i]);
@@ -210,6 +231,17 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
         handleLineSelection(newIndex);
     };
 
+    // Handler for FEN navigation buttons
+    const handleFenNavigation = (direction: string) => {
+        console.log(`FEN navigation: ${direction}`);
+    };
+
+    const handleBoardSwitch = () => {
+        setIsToggled(!isToggled);
+        setOrientation(o => o === 'white' ? 'black' : 'white');
+    };
+
+
     // Switch players toggle button
     const [isToggled, setIsToggled] = useState(false);
 
@@ -222,26 +254,28 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
                     Set FEN Position
                 </label>
                 <input type="text" id="fenInput" value={boardFen} onChange={(e) => { 
-                    setFen(e.target.value); setBoardFen(e.target.value) }}
+                    setFen(e.target.value); 
+                    setAnalysisFen(e.target.value);
+                    setBoardFen(e.target.value); }}
                     className="mt-1 block w-full rounded-md border-gray-200 shadow-sm"
                 />
             </div>
 
             {/* Control Rows */}
-            <div className="space-y-2">
+            <div className="space-y-3">
                 <div className="flex items-center gap-2">
                     <TooltipIcon tooltipText="Navigate FEN positions from the video."/>
-                    <ControllerButton onClick={() => {}}>{'^'}</ControllerButton>
-                    <ControllerButton onClick={() => {}}>{'v'}</ControllerButton>
-                    <ControllerButton onClick={() => {}}>{'<'}</ControllerButton>
-                    <ControllerButton onClick={() => {}}>{'>'}</ControllerButton>
+                    <ControlButton onClick={() => handleFenNavigation('up')}>{arrowUp}</ControlButton>
+                    <ControlButton onClick={() => handleFenNavigation('down')}>{arrowDown}</ControlButton>
+                    <ControlButton onClick={() => handleFenNavigation('left')}>{arrowLeft}</ControlButton>
+                    <ControlButton onClick={() => handleFenNavigation('right')}>{arrowRight}</ControlButton>
                 </div>
                 <div className="flex items-center gap-2">
                     <TooltipIcon tooltipText="Use these controls to navigate the analysis lines below."/>
-                    <ControllerButton onClick={() => navigateLine('up')}>{'^'}</ControllerButton>
-                    <ControllerButton onClick={() => navigateLine('down')}>{'v'}</ControllerButton>
-                    <ControllerButton onClick={() => navigateMove('backward')}>{'<'}</ControllerButton>
-                    <ControllerButton onClick={() => navigateMove('forward')}>{'>'}</ControllerButton>
+                    <ControlButton onClick={() => navigateLine('up')}>{arrowUp}</ControlButton>
+                    <ControlButton onClick={() => navigateLine('down')}>{arrowDown}</ControlButton>
+                    <ControlButton onClick={() => navigateMove('backward')}>{arrowLeft}</ControlButton>
+                    <ControlButton onClick={() => navigateMove('forward')}>{arrowRight}</ControlButton>
                 </div>
             </div>
 
@@ -253,7 +287,7 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
 
             <div className="flex items-center justify-between">
                 <span className="font-bold">Flip Board:</span>
-                <ToggleSwitch checked={isToggled} onChange={setIsToggled} />
+                <ToggleSwitch checked={isToggled} onChange={handleBoardSwitch} />
             </div>
 
             <div>
@@ -279,8 +313,6 @@ const ReactChessBoardComponent: React.FC<{ initialFen: string | null}> = ({ init
             
         </div>
     );
- 
-    
 };
 
 export default ReactChessBoardComponent;
