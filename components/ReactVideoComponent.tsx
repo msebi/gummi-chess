@@ -1,43 +1,25 @@
 import React, { useState } from 'react';
 import YouTube from 'react-youtube';
 import { KeyPosition } from '../generated/prisma/client';
-import { LeftRightPad } from './ui/ui-controllers/Dpad';
 import ActionTooltip from './ui/ActionTooltip';
 
 type ReactVideoComponentProps = {
     videoUrl: string;
     tags: { tag: { name: string } }[];
     keyPositions: KeyPosition[];
-    onSetFen: (fen: string | null) => void; // Function from parent
-    activePositionIndex: number | null; // Receives the active index
-    onSelectPosition: (index: number) => void; // Function to call when an item is clicked
+    selectedPositionIndex: number | null; // Receives the selected index for highlighting
+    onSelectPosition: (index: number) => void; // Reports which index has been clicked 
 };
 
 const ReactVideoComponent: React.FC<ReactVideoComponentProps> = ({ 
     videoUrl, 
     tags, 
     keyPositions, 
-    onSetFen,
-    activePositionIndex, 
+    selectedPositionIndex,
     onSelectPosition,
 }) => {
     const [selectedFen, setSelectedFen] = useState<string | null>(null);
     const [showTooltip, setShowTooltip] = useState(false);
-
-    const handleSendFen = () => {
-        if (!selectedFen) {
-            setShowTooltip(true);
-            return;
-        }
-        setShowTooltip(false);
-        onSetFen(selectedFen);
-    };
-
-    const handleClearFen = () => {
-        onSetFen('start'); // Pass null to clear
-        // setSelectedFen(null);
-        setShowTooltip(false);
-    };
 
     const getYouTubeId = (url: string) => {
         try {
@@ -59,26 +41,12 @@ const ReactVideoComponent: React.FC<ReactVideoComponentProps> = ({
         },
     };
 
-    const handleLeftRightClick = (direction: string) => {
-        console.log('LeftRight button pressed: ${direction}');
-        switch (direction) {
-            case 'left': 
-                handleClearFen();
-                return;
-            case 'right':
-                handleSendFen();
-                return;
-            default:
-                console.log(`Invalid direction when LeftRight button clicked. Direction: ${direction}`);
-        }
-    };
-
     return (
         // YouTube player
         <div className="p-4">
             {videoId ? <YouTube videoId={videoId} opts={options} /> : <p>Invalid video URL.</p>}
             <div className="mt-4">
-                {tags.map(( { tag } ) => (
+                {tags.map(({ tag }) => (
                     <span key={tag.name} className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold
                     text-gray-700 mr-2 mb-2">
                         #{tag.name}
@@ -94,12 +62,10 @@ const ReactVideoComponent: React.FC<ReactVideoComponentProps> = ({
                         <div
                             key={pos.id}
                             onClick={() => {
-                                onSelectPosition(index)
-                                setSelectedFen(pos.fen)
-                                setShowTooltip(false);
+                                onSelectPosition(index);
                             }}
                             className={`p-2 cursor-pointer border-b last:border-b-0 hover:bg-gray-100 
-                                ${selectedFen === pos.fen ? 'bg-blue-100' : ''}`}
+                                ${selectedPositionIndex === index ? 'bg-blue-100' : ''}`}
                         >
                             <p className="text-sm font-mono truncate">{pos.fen}</p>
                             {pos.description && 

@@ -6,38 +6,45 @@ import dynamic from 'next/dynamic';
 
 const ReactViewCourseComponent: React.FC<{ course: SerializableCourse }> = ({ course }) => {
     // Index of the currently selected FEN from the course.keyPositions array
-    const [currentKeyPositionIndex, setCurrentKeyPositionIndex] = useState<number | null>(null);
+    const [selectedKeyPositionIndex, setSelectedKeyPositionIndex] = useState<number | null>(null);
 
-    // Lift up the FEN string so that it can be passed down to child components
-    const [activeFen, setActiveFen] = useState<string | null>('start');
+    // State for which FEN is currently on the board
+    const [boardFen, setBoardFen] = useState<string | null>('start');
     
-    // Update the active FEN whenever the index changes
-    useEffect(() => {
-        if (currentKeyPositionIndex !== null && course.keyPositions[currentKeyPositionIndex]) {
-            setActiveFen(course.keyPositions[currentKeyPositionIndex].fen)
-        } else {
-            setActiveFen('start');
-        }
-    }, [currentKeyPositionIndex, course.keyPositions]);
+    // State for tool tip
+    const [actionTooltip, setActionTooltip] = useState<boolean | false>(false);
 
     const navigateKeyPosition = (direction: 'up' | 'down' | 'left' | 'right') => {
-        if (course.keyPositions.length === 0)
-            return;
-        
         if (direction === 'up') {
-            setCurrentKeyPositionIndex(prev => {
+            // Cycle selection up the list 
+            setSelectedKeyPositionIndex(prev => {
+                if (course.keyPositions.length === 0) 
+                    return null;
                 if (prev === null || prev <= 0) 
                     return course.keyPositions.length - 1;
                 return prev - 1;
             });
         } else if (direction === 'down') {
-            setCurrentKeyPositionIndex(prev => {
-                if (prev === null || prev >= course.keyPositions.length - 1)
+            // Cycle selection down the list
+            setSelectedKeyPositionIndex(prev => {
+                if (course.keyPositions.length === 0) 
+                    return null;
+                if (prev === null || prev >= course.keyPositions.length - 1) 
                     return 0;
                 return prev + 1;
             });
+        } else if (direction === 'left') {
+            // Reset the board to the start position
+            setBoardFen('start');
+        } else if (direction === 'right') {
+            // Send the selected FEN to the board
+            if (selectedKeyPositionIndex !== null && course.keyPositions[selectedKeyPositionIndex]) {
+                setBoardFen(course.keyPositions[selectedKeyPositionIndex].fen);
+            } else {
+                console.warn("No FEN position selected to send to the board");
+                setActionTooltip(false);
+            }
         }
-        // TODO: left and right move the fen string to the chess board component
     };
 
     return (
@@ -56,15 +63,14 @@ const ReactViewCourseComponent: React.FC<{ course: SerializableCourse }> = ({ co
                         tags={course.tags} 
                         keyPositions={course.keyPositions}    
                         // Pass the current index down for highlighting
-                        activePositionIndex={currentKeyPositionIndex}
+                        selectedPositionIndex={selectedKeyPositionIndex}
                         // Pass the setter function for direct clicks on the list
-                        onSelectPosition={setCurrentKeyPositionIndex}
-                        onSetFen={setActiveFen}
+                        onSelectPosition={setSelectedKeyPositionIndex}                        
                     />
                 </div>
                 <div className="w-full md:w-1/2">
                     <ReactChessBoardComponent 
-                        initialFen={activeFen || 'start'}
+                        initialFen={boardFen || 'start'}
                         // Pass the navigation handler down to the pad
                         onFenNavigate={navigateKeyPosition}
                     />
