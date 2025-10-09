@@ -5,20 +5,25 @@ import ReactLogoComponent from './icons/ReactLogoComponent';
 import ReactMenuComponent from './ReactMenuComponent';
 import ReactProfileDropdown from './ReactProfileDropdown';
 
-const menuItems = [
-  { label: 'Home', href: '/' },
-  { label: 'Courses', href: '/courses' },
-  { label: 'About', href: '/about' },
-];
 
 const ReactHeaderComponent: React.FC = () => {
   // Use the session hook to get authentcation status
   const { data: session, status } = useSession(); 
   const isLoading = status === 'loading';
+  const isAdmin = session?.user?.isAdmin; 
+
+  const menuItems = [
+    { label: 'Home', href: '/' },
+    { label: 'Courses', href: '/courses' },
+    { label: 'About', href: '/about' },
+    // Only add the Admin link if the user is an admin
+    ...(isAdmin? [{ label: 'Admin', href: '/admin'}] : []),
+  ];
+
 
   return (
     <header className="w-full bg-gray-100 border-b-2 border-gray-200">
-      <div className="container mx-auto flex items-center">
+      <div className="container mx-auto flex items-center justify-between">
         <div className="w-[30%]">
           <ReactLogoComponent 
               className="h-16" 
@@ -43,7 +48,7 @@ const ReactHeaderComponent: React.FC = () => {
           ) : (
             // If not authenticated, show the Login link 
             <Link href="/login">
-              <span className="text-lg font-medium hover:text-blue-600 transition-colors">
+              <span className="cursor-pointer text-lg font-medium hover:text-blue-600 transition-colors">
                 Login
               </span>
             </Link>
