@@ -9,7 +9,13 @@ declare module "next-auth" {
     user: {
       /** The user's database id. */
       id: string;
+      isAdmin: boolean;
     } & DefaultSession["user"]; // Merge with default user properties
+  }
+
+  // Extend the built-in User type
+  interface User extends DefaultUser {
+    isAdmin: boolean;
   }
 }
 
@@ -18,5 +24,6 @@ declare module "next-auth/jwt" {
   interface JWT {
     /** The user's database id. */
     id: string;
+    isAdmin: boolean;
   }
 }

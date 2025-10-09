@@ -79,7 +79,7 @@ const AdminPage = ({ course, totalPages }: InferGetServerSidePropsType<typeof ge
 
                 {view === 'edit-course' && courseToEdit && (
                     <ReactCreateCourseComponent 
-                        initailData={courseToEdit}
+                        initialData={courseToEdit}
                         onSave={handleSave}
                         onCancel={handleCancel}
                     />

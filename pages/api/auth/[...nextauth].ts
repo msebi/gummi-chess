@@ -65,6 +65,7 @@ export const authOptions = {
         // On initial sign in, the 'user' object is available 
         // We are adding the user's id to the token
         token.id = user.id; 
+        token.isAdmin = user.isAdmin;
       }
       return token;
     },
@@ -73,6 +74,7 @@ export const authOptions = {
     session({ session, token }: { session: Session, token: JWT }) {
       // We are taking the id from the token and adding it to the session's user object
       session.user.id = token.id as string;
+      session.user.isAdmin = token.isAdmin as boolean;
       return session;
     }
   }
