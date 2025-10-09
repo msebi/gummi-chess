@@ -11,7 +11,6 @@ import { ReactCreateCourseComponent } from '@/components/admin/ReactCreateCourse
 
 // This is the main type for our course data throughout the admin panel
 import { type SerializableCourse } from '@/pages/index';
-import { getServerSideProps } from '../dashboard';
 
 type AdminView = 'list-courses' | 'manage-users' | 'create-course' | 'edit-course';
 
