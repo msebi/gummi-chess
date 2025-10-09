@@ -30,6 +30,21 @@ export const ReactAdminCourseComponentContainer: React.FC<Props> =
                     />
                 ))}
             </div>
+
+            {/* Pagination Controls */}
+            <div className="flex justify-center items-center mt-8 gap-4">
+                {/* TODO: Implement a more involved pagination mechanism */}
+                <span>
+                    Page {currentPage} of {totalPages}
+                </span>
+            </div>
+
+            <div className="mt-8 text-center">
+                <button onClick={onAdd} 
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    Add Course
+                </button>
+            </div>
         </div>
     );
 };
