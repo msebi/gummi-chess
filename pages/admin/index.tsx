@@ -14,7 +14,7 @@ import { type SerializableCourse } from '@/pages/index';
 
 type AdminView = 'list-courses' | 'manage-users' | 'create-course' | 'edit-course';
 
-const AdminPage = ({ course, totalPages }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const AdminPage = ({ courses, totalPages }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [view, setView] = useState<AdminView>('list-courses');
     const [courseToEdit, setCourseToEdit] = useState<SerializableCourse | null>(null);
 
@@ -33,7 +33,7 @@ const AdminPage = ({ course, totalPages }: InferGetServerSidePropsType<typeof ge
         // TODO: change to fetch changes
         // In a real app, you'd use a data fetching library like SWR or React Query to re-fetch
         // For now, a simple page reload is the easiest way.
-        window.location.reload;
+        window.location.reload();
     };
 
     return (
@@ -61,7 +61,7 @@ const AdminPage = ({ course, totalPages }: InferGetServerSidePropsType<typeof ge
                 {/* Conditional Rendering of Views */}
                 {view === 'list-courses' && (
                     <ReactAdminCourseComponentContainer 
-                        courses={course}
+                        courses={courses}
                         totalPages={totalPages}
                         onAdd={() => setView('create-course')}
                         onEdit={handleEdit}
