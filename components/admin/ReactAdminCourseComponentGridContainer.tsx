@@ -1,10 +1,11 @@
-import { useRouter } from "next/router";
 import { ReactAdminCourseComponent } from "./ReactAdminCourseComponent";
 import { type SerializableCourse } from "@/pages/index";
+import ServerPagination from "../ui/ServerPagination";
 
 type Props = {
     courses: SerializableCourse[];
     totalPages: number;
+    currentPage: number;
     onAdd: () => void;
     onEdit: (course: SerializableCourse) => void;
     onDeleteSuccess: () => void;
@@ -12,12 +13,14 @@ type Props = {
 
 export const ReactAdminCourseComponentGridContainer: React.FC<Props> = ({ courses,
                                                                           totalPages,
+                                                                          currentPage,
                                                                           onAdd,
                                                                           onEdit,
                                                                           onDeleteSuccess
                                                                         }) => {
-    const router = useRouter();
-    const currentPage = router.query.page ? parseInt(router.query.page as string) : 1;
+    // TODO: cleanup
+    // const router = useRouter();
+    // const currentPage = router.query.page ? parseInt(router.query.page as string) : 1;
 
     return (
         <div>
@@ -37,12 +40,19 @@ export const ReactAdminCourseComponentGridContainer: React.FC<Props> = ({ course
             </div>
 
             {/* Paging Controls */}
-            <div className="flex justify-center items-center mt-8 gap-4">
+            {/* <div className="flex justify-center items-center mt-8 gap-4">
                 <span>Page {currentPage} of {totalPages}</span>
+            </div> */}
+            <div className="flex justify-center items-center mt-8 gap-4">
+                <ServerPagination 
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    baseUrl="/admin"
+                />
             </div>
 
             <div className="mt-8 text-center">
-                <button onClick={onAdd} className="bg-gree-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                <button onClick={onAdd} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                     Add Course
                 </button>
             </div>

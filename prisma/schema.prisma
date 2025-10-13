@@ -49,7 +49,7 @@ model KeyPosition {
   id           String @id @default(cuid())
   fen          String  // The FEN string for the position
   description  String? 
-  course       Course @relation(fields: [courseId], references: [id]) 
+  course       Course @relation(fields: [courseId], references: [id], onDelete: Cascade) 
   courseId     String
 }
 
@@ -66,7 +66,7 @@ model Rating {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   userId    String
-  course    Course   @relation(fields: [courseId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId  String
 }
 
@@ -75,7 +75,7 @@ model UserCourses {
   enrolledAt DateTime @default(now())
   user       User     @relation(fields: [userId], references: [id])
   userId     String
-  course     Course   @relation(fields: [courseId], references: [id])
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId   String
 
   // The line @@id([userId, courseId]) defines the Primary Key for the 
@@ -85,7 +85,7 @@ model UserCourses {
 }
 
 model CourseTags {
-  course   Course @relation(fields: [courseId], references: [id])
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId String
   tag      Tag    @relation(fields: [tagId], references: [id])
   tagId    String

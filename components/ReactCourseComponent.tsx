@@ -37,8 +37,9 @@ const ReactCourseComponent: React.FC<Course> = ({ id, imageUrl, title, tags, isC
 
   // Card is wrapped conditionally with a Link
   return isClickable ? (    
-    <Link href={`/courses/${id}`} passHref>
-      <a className="block h-full">{cardContent}</a>
+    <Link href={`/courses/${id}`} className="block h-full" passHref>
+      {/* <a className="block h-full">{cardContent}</a> */}
+      {cardContent}
     </Link>
   ) : (
     <div className="h-full">{cardContent}</div>

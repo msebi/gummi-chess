@@ -7,14 +7,14 @@ import prisma from '@/lib/prisma';
 import ReactHeaderComponent from '@/components/ReactHeaderComponent';
 import ReactFooterComponent from '@/components/ReactFooterComponent';
 import { ReactAdminCourseComponentGridContainer } from '@/components/admin/ReactAdminCourseComponentGridContainer';
-import { ReactCreateCourseComponent } from '@/components/admin/ReactAdminCreateCourseComponent';
+import { ReactAdminCreateCourseComponent } from '@/components/admin/ReactAdminCreateCourseComponent';
 
 // This is the main type for our course data throughout the admin panel
 import { type SerializableCourse } from '@/pages/index';
 
 type AdminView = 'list-courses' | 'manage-users' | 'create-course' | 'edit-course';
 
-const AdminPage = ({ courses, totalPages }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const AdminPage = ({ courses, totalPages, currentPage }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [view, setView] = useState<AdminView>('list-courses');
     const [courseToEdit, setCourseToEdit] = useState<SerializableCourse | null>(null);
 
@@ -59,10 +59,11 @@ const AdminPage = ({ courses, totalPages }: InferGetServerSidePropsType<typeof g
                 </div>
 
                 {/* Conditional Rendering of Views */}
-                {view === 'list-courses' && (
+                {view === 'list-courses' && (                    
                     <ReactAdminCourseComponentGridContainer 
                         courses={courses}
                         totalPages={totalPages}
+                        currentPage={currentPage}
                         onAdd={() => setView('create-course')}
                         onEdit={handleEdit}
                         onDeleteSuccess={handleSave} // Reload data after delete
@@ -70,14 +71,14 @@ const AdminPage = ({ courses, totalPages }: InferGetServerSidePropsType<typeof g
                 )}
 
                 {view === 'create-course' && (
-                    <ReactCreateCourseComponent
+                    <ReactAdminCreateCourseComponent
                         onSave={handleSave}
                         onCancel={handleCancel}
                     />
                 )}
 
                 {view === 'edit-course' && courseToEdit && (
-                    <ReactCreateCourseComponent 
+                    <ReactAdminCreateCourseComponent 
                         initialData={courseToEdit}
                         onSave={handleSave}
                         onCancel={handleCancel}
@@ -128,6 +129,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         props: {
             courses:  serializableCourses,
             totalPages: Math.ceil(totalCourses / pageSize),
+            currentPage: page,
         },
     };
 };
