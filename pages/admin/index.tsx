@@ -6,8 +6,8 @@ import prisma from '@/lib/prisma';
 
 import ReactHeaderComponent from '@/components/ReactHeaderComponent';
 import ReactFooterComponent from '@/components/ReactFooterComponent';
-import { ReactAdminCourseComponentContainer } from '@/components/admin/ReactAdminCourseComponentContainer';
-import { ReactCreateCourseComponent } from '@/components/admin/ReactCreateCourseComponent';
+import { ReactAdminCourseComponentGridContainer } from '@/components/admin/ReactAdminCourseComponentGridContainer';
+import { ReactCreateCourseComponent } from '@/components/admin/ReactAdminCreateCourseComponent';
 
 // This is the main type for our course data throughout the admin panel
 import { type SerializableCourse } from '@/pages/index';
@@ -60,7 +60,7 @@ const AdminPage = ({ courses, totalPages }: InferGetServerSidePropsType<typeof g
 
                 {/* Conditional Rendering of Views */}
                 {view === 'list-courses' && (
-                    <ReactAdminCourseComponentContainer 
+                    <ReactAdminCourseComponentGridContainer 
                         courses={courses}
                         totalPages={totalPages}
                         onAdd={() => setView('create-course')}

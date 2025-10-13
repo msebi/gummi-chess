@@ -31,18 +31,16 @@ export const ReactAdminCourseComponent: React.FC<Props> = ({ course, onEdit, onD
         imageUrl: course.thumbnailUrl,
         // Ensure tags are mapped correctly, handling potential undefineds
         tags: course.tags?.map(t => t.tag.name).filter(Boolean) as string[],
+        isClickable: false,
     };
 
     return (
-        // 1. Add `relative` to this container. This makes it the "anchor"
-        //      for the absolutely positioned buttons inside it
-        <div className="relative">            
-            {/* 2. Render the course component directly. Removed the extra divs and `flex-grow`
-            that was causing the stretching */}
-            <ReactCourseComponent {...courseProps} />            
-
-            {/* New container for the buttons */}
-            <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+        // Flex container to place buttons beside the course content
+        <div className="flex items-start gap-4 p-4 border rounded-lg shadow-md bg-white">            
+            <div className="flex-grow">
+                <ReactCourseComponent {...courseProps} />            
+            </div>                        
+            <div className="flex flex-col gap-2 pt-2">
                 <button 
                     onClick={onEdit} 
                     className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 
