@@ -42,8 +42,8 @@ export const ReactAdminCourseComponent: React.FC<Props> = ({ course, onEdit, onD
             </div>                        
             <div className="flex flex-col gap-2 pt-2">
                 <button 
-                    onClick={onEdit} 
-                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 
+                    onClick={onEdit}                     
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 
                                 px-4 rounded shadow-lg transition-transform hover:scale-105">
                     Edit 
                 </button>

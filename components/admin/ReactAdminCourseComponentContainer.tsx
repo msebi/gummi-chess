@@ -41,7 +41,7 @@ export const ReactAdminCourseComponentContainer: React.FC<Props> =
 
             <div className="mt-8 text-center">
                 <button onClick={onAdd} 
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Add Course
                 </button>
             </div>
