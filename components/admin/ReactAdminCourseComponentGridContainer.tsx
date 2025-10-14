@@ -28,6 +28,16 @@ export const ReactAdminCourseComponentGridContainer: React.FC<Props> = ({ course
                 Add, edit or delete Courses
             </h2>
 
+            <div className="flex justify-center items-center mt-8 gap-4 pb-6">
+                <ServerPagination 
+                    totalPages={totalPages}
+                    currentPage={currentPage}
+                    baseUrl="/admin"
+                    variant="style-2"
+                />
+
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {courses.map(course => (
                     <ReactAdminCourseComponent 
@@ -48,6 +58,7 @@ export const ReactAdminCourseComponentGridContainer: React.FC<Props> = ({ course
                     totalPages={totalPages}
                     currentPage={currentPage}
                     baseUrl="/admin"
+                    variant="style-2"
                 />
             </div>
 
