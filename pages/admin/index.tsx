@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]';
 import prisma from '@/lib/prisma';
@@ -8,15 +10,32 @@ import ReactHeaderComponent from '@/components/ReactHeaderComponent';
 import ReactFooterComponent from '@/components/ReactFooterComponent';
 import { ReactAdminCourseComponentGridContainer } from '@/components/admin/ReactAdminCourseComponentGridContainer';
 import { ReactAdminCreateCourseComponent } from '@/components/admin/ReactAdminCreateCourseComponent';
+import { ReactAdminUserListComponent } from '@/components/admin/ReactAdminUserListComponent';
+import { User } from '@/generated/prisma/client';
 
 // This is the main type for our course data throughout the admin panel
 import { type SerializableCourse } from '@/pages/index';
 
-type AdminView = 'list-courses' | 'manage-users' | 'create-course' | 'edit-course';
+type AdminView = 'list-courses' | 'manage-users' | 'create-course' | 'edit-course' | 'courses' | 'users';
 
-const AdminPage = ({ courses, totalPages, currentPage }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-    const [view, setView] = useState<AdminView>('list-courses');
+type AdminPageProps = {
+    view: AdminView;
+    courses?: SerializableCourse[];
+    users?: User[];
+    totalPages: number;
+    currentPage: number;
+};
+
+
+const AdminPage = ({ view: initialView, courses, users, totalPages, currentPage }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+    const [view, setView] = useState<AdminView>(initialView);
     const [courseToEdit, setCourseToEdit] = useState<SerializableCourse | null>(null);
+
+    const router = useRouter();
+
+    const handleTabChange = (tab: 'courses' | 'users') => {
+        router.push(`/admin?tab=${tab}`);
+    };
 
     const handleEdit = (course: SerializableCourse) => {
         setCourseToEdit(course);
@@ -41,26 +60,27 @@ const AdminPage = ({ courses, totalPages, currentPage }: InferGetServerSideProps
             <ReactHeaderComponent />
             <main className="flex-grow container mx-auto p-4">
                 <h1 className="text-3xl font-bold mb-4">
-                    Administration 
+                    Administration
                 </h1>
                 {/* Placeholder for ReactAdministrationMenuComponent */}
                 <div className="flex border-b mb-4">
                     <button
-                        onClick={() => setView('list-courses')}
-                        className={`py-2 px-4 ${view.includes('course') ? 'border-b-2 border-blue-500 font-semibold' : ''}`}
+                        onClick={() => handleTabChange('courses')}
+                        className={`py-2 px-4 ${initialView === 'courses' ? 'border-b-2 border-blue-500 font-semibold' : ''}`}
                     >
                         Manage Courses
                     </button>
                     <button
-                        className="py-2 px-4 text-gray-500 cursor-not-allowed" // Manage Users is not implemented yet
+                        onClick={() => handleTabChange('users')}
+                        className={`py-2 px-4 ${initialView === 'users' ? 'border-b-2 border-blue-500 font-semibold' : ''}`}
                     >
                         Manage Users
                     </button>
                 </div>
 
                 {/* Conditional Rendering of Views */}
-                {view === 'list-courses' && (                    
-                    <ReactAdminCourseComponentGridContainer 
+                {initialView === 'courses' && courses && (
+                    <ReactAdminCourseComponentGridContainer
                         courses={courses}
                         totalPages={totalPages}
                         currentPage={currentPage}
@@ -68,6 +88,11 @@ const AdminPage = ({ courses, totalPages, currentPage }: InferGetServerSideProps
                         onEdit={handleEdit}
                         onDeleteSuccess={handleSave} // Reload data after delete
                     />
+                )}
+
+                {initialView === 'users' && users && (
+                    <ReactAdminUserListComponent users={users} />
+                    // TODO: add pagination
                 )}
 
                 {view === 'create-course' && (
@@ -78,12 +103,12 @@ const AdminPage = ({ courses, totalPages, currentPage }: InferGetServerSideProps
                 )}
 
                 {view === 'edit-course' && courseToEdit && (
-                    <ReactAdminCreateCourseComponent 
+                    <ReactAdminCreateCourseComponent
                         initialData={courseToEdit}
                         onSave={handleSave}
                         onCancel={handleCancel}
                     />
-                )} 
+                )}
 
             </main>
             <ReactFooterComponent />
@@ -91,7 +116,7 @@ const AdminPage = ({ courses, totalPages, currentPage }: InferGetServerSideProps
     );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps<AdminPageProps> = async (context) => {
     const session = await getServerSession(context.req, context.res, authOptions);
 
     // 1. Auth Check
@@ -105,33 +130,62 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     }
 
     // 2. Data Fetching & Pagination 
+    const tab = context.query.tab === 'users' ? 'users' : 'courses';
     const page = context.query.page ? parseInt(context.query.page as string, 10) : 1;
     const pageSize = 10; // Show 10 courses per page
 
-    const courses = await prisma.course.findMany({
-        skip: (page - 1) * pageSize, 
-        take: pageSize, 
-        orderBy: { createdAt: 'desc'},
-        include: { tags: { include: {tag: true} }, keyPositions: true },
-    });
+    if (tab === 'users') {
+        const users = await prisma.user.findMany({
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+            orderBy: { name: 'asc' }
+        });
 
-    const totalCourses = await prisma.course.count();
+        const totalUsers = await prisma.user.count();
 
-    // 3. Serialize Data
-    const serializableCourses = courses.map((course) => ({
-        ...course,
-        price: course.price.toNumber(),
-        createdAt: course.createdAt.toISOString(),
-        updatedAt: course.updatedAt.toISOString(),
-    }));
+        // Serialize data objects for users
+        const serializableUsers = users.map(user => ({
+            ...user,
+            emailVerified: user.emailVerified?.toISOString() || null,
+            lastSeen: user.lastSeen?.toISOString() || null,
+        }));
 
-    return {
-        props: {
-            courses:  serializableCourses,
-            totalPages: Math.ceil(totalCourses / pageSize),
-            currentPage: page,
-        },
-    };
+        return {
+            props: {
+                view: 'users',
+                users: serializableUsers as User[],
+                totalPages: Math.ceil(totalUsers / pageSize),
+                currentPage: page,
+            } as AdminPageProps,
+        };
+    } else {
+        // Default to courses
+        const courses = await prisma.course.findMany({
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+            orderBy: { createdAt: 'desc' },
+            include: { tags: { include: { tag: true } }, keyPositions: true },
+        });
+
+        const totalCourses = await prisma.course.count();
+
+        // 3. Serialize Data
+        const serializableCourses = courses.map((course) => ({
+            ...course,
+            price: course.price.toNumber(),
+            createdAt: course.createdAt.toISOString(),
+            updatedAt: course.updatedAt.toISOString(),
+        }));
+
+        return {
+            props: {
+                view: 'courses',
+                courses: serializableCourses,
+                totalPages: Math.ceil(totalCourses / pageSize),
+                currentPage: page,
+            } as AdminPageProps,
+        };
+    }
 };
 
 export default AdminPage;

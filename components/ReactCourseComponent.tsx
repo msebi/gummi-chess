@@ -5,6 +5,7 @@ import Link from 'next/link';
 export interface Course {
   id: string;
   imageUrl: string;
+  thumbnailUrl?: string;
   title: string;
   tags: string[];
   isClickable?: boolean; 
