@@ -1,11 +1,11 @@
 /* ===== Base Wrapper ===== */
-.sweetPagination {
+.serverPagination {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.sweetPagination .paginationUL {
+.serverPagination .paginationUL {
   display: flex;
   flex-wrap: nowrap; /* Always keep in one line unless mobile */
   justify-content: center;
@@ -14,13 +14,13 @@
   padding: 0;
 }
 
-.sweetPagination .paginationUL .pageItem {
+.serverPagination .paginationUL .pageItem {
   list-style: none;
   display: inline-flex;
 }
 
 /* ===== Base Button Style ===== */
-.sweetPagination .paginationUL .pageItem .pageButton {
+.serverPagination .paginationUL .pageItem .pageButton {
   font-size: 16px;
   font-weight: 600;
   border-radius: 50%;
@@ -36,17 +36,17 @@
   transition: all 0.2s ease;
 }
 
-.sweetPagination .paginationUL .pageItem .pageButton:hover {
+.serverPagination .paginationUL .pageItem .pageButton:hover {
   color: #f1f2f6;
   background-color: #fd7238;
 }
 
-.sweetPagination .paginationUL .pageItem .activeButton {
+.serverPagination .paginationUL .pageItem .activeButton {
   color: #f1f2f6;
   background-color: #fd7238;
 }
 
-.sweetPagination .paginationUL .pageItem .pageButton:disabled {
+.serverPagination .paginationUL .pageItem .pageButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
@@ -123,11 +123,11 @@
 
 /* ===== Mobile Responsiveness ===== */
 @media only screen and (max-width: 576px) {
-  .sweetPagination .paginationUL {
+  .serverPagination .paginationUL {
     flex-wrap: wrap;
   }
 
-  .sweetPagination .paginationUL .pageItem .pageButton {
+  .serverPagination .paginationUL .pageItem .pageButton {
     width: 25px;
     height: 25px;
     margin: 3px;

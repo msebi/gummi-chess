@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
 
-import './SweetPagination.css';
+import styles from './ServerPagination.module.css'; 
 
 type ServerPaginationProps = {
     totalPages: number;
@@ -34,27 +34,27 @@ const ServerPagination: React.FC<ServerPaginationProps> = ({
     const pageNumbers = getPaginationRange();
 
     return (
-        <nav className="sweetPagination">
-            <ul className="paginationUL">
+        <nav className={styles.serverPagination}>
+            <ul className={styles.paginationUL}>
                 {/* Previous Button */}
                 <li>
-                    <Link href={currentPage > 1 ? `${baseUrl}?page=${currentPage - 1}` : '#'}>
-                        <a className={clsx('pageButton commonButtonStyle leftNavigation', { 'disabled' : currentPage === 1 })}>
-                            &lt;
-                        </a>
+                    <Link href={currentPage > 1 ? `${baseUrl}?page=${currentPage - 1}` : '#'}
+                          className={clsx(styles.pageButton, styles.commonButtonStyle, styles.leftNavigation, { [styles.disabled]: currentPage === 1 })}>                        
+                        &lt;                        
                     </Link>
                 </li>
 
                 {/* Page Numbers */}
                 {pageNumbers.map((num, idx) => (
-                    <li key={idx} className="pageItem">
+                    <li key={idx} className={styles.pageItem}>
                         {num === '...' ? (
-                            <span className="pageButton commonButtonStyle disabled">...</span>
+                            <span className={clsx(styles.pageButton, styles.commonButtonStyle, styles.disabled)}>...</span>
                         ) : (
-                            <Link href={`${baseUrl}?page=${num}`}>
-                                <a className={currentPage === num ? "pageButton activeButton commonButtonStyle" : "pageButton commonButtonStyle"}>
-                                    {num}
-                                </a>
+                            <Link href={`${baseUrl}?page=${num}`} 
+                                    className={currentPage === num ? 
+                                                clsx(styles.pageButton, styles.activeButton, styles.commonButtonStyle) : 
+                                                clsx(styles.pageButton, styles.commonButtonStyle)}>
+                                {num}
                             </Link>
                         )}
                     </li>
@@ -62,10 +62,10 @@ const ServerPagination: React.FC<ServerPaginationProps> = ({
 
                 {/* Next Button */}
                 <li>
-                    <Link href={currentPage < totalPages ? `${baseUrl}?page=${currentPage + 1}` : "#"}>
-                        <a className={clsx("pageButton commonButtonStyle rightNavigation", { "disabled": currentPage === totalPages})}>
-                            &gt;
-                        </a>
+                    <Link href={currentPage < totalPages ? `${baseUrl}?page=${currentPage + 1}` : "#"} 
+                        className={clsx(styles.pageButton, styles.commonButtonStyle, styles.rightNavigation, 
+                            { [styles.disabled]: currentPage === totalPages })}>
+                        &gt;
                     </Link>
                 </li>
             </ul>
