@@ -11,19 +11,9 @@ import { ReactAdminCourseComponentGridContainer } from '@/components/admin/React
 import { ReactAdminCreateCourseComponent } from '@/components/admin/ReactAdminCreateCourseComponent';
 import { ReactAdminUserListComponent } from '@/components/admin/ReactAdminUserListComponent';
 
-// Import base prisma type and build upon it
-import { User as UserType } from '@/generated/prisma/client';
-// This is the main type for our course data throughout the admin panel
-import { type SerializableCourse } from '@/pages/index';
+import { SerializableCourse, SerializableUser } from '@/types/index';
 
 type AdminView = 'list-courses' | 'manage-users' | 'create-course' | 'edit-course' | 'courses' | 'users';
-
-// New type for the JSON-safe User object 
-export type SerializableUser = Omit<UserType, 'emailVerified' | 'lastSeen' | 'createdAt'> & {
-    emailVerified: string | null;
-    lastSeen: string | null;
-    createdAt: string; // createdAt not nullable in schema
-};
 
 type AdminPageProps = {
     view: AdminView;

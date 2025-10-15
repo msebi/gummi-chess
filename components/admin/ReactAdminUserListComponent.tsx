@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import { User } from '@/generated/prisma/client';
+import { SerializableUser } from '@/types/index';
 
 type Props = {
-    users: User[];
+    users: SerializableUser[];
 };
 
 export const ReactAdminUserListComponent: React.FC<Props> = ({ users }) => {

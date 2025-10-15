@@ -8,8 +8,6 @@ import ReactHeaderComponent from '@/components/ReactHeaderComponent';
 import ReactFooterComponent from '@/components/ReactFooterComponent';
 import ReactCourseComponent from '@/components/ReactCourseComponent';
 
-// Define a detailed type for the user data 
-type UserDetails = Awaited<ReturnType<typeof fetchUserDetails>>;
 
 // Define a type for the serialized course, including its relations
 type SerializedCourseInUser = {
@@ -196,6 +194,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     // Serialize all the dates before passing 
     const serializableUserDetails = {
         ...userDetails,
+        createdAt: userDetails.createdAt.toISOString(),
         emailVerified: userDetails.emailVerified?.toISOString() || null,
         lastSeen: userDetails.lastSeen?.toISOString() || null,
         courses: userDetails.courses.map(uc => ({
