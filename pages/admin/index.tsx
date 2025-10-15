@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]';
 import prisma from '@/lib/prisma';
@@ -11,26 +10,32 @@ import ReactFooterComponent from '@/components/ReactFooterComponent';
 import { ReactAdminCourseComponentGridContainer } from '@/components/admin/ReactAdminCourseComponentGridContainer';
 import { ReactAdminCreateCourseComponent } from '@/components/admin/ReactAdminCreateCourseComponent';
 import { ReactAdminUserListComponent } from '@/components/admin/ReactAdminUserListComponent';
-import { User } from '@/generated/prisma/client';
 
+// Import base prisma type and build upon it
+import { User as UserType } from '@/generated/prisma/client';
 // This is the main type for our course data throughout the admin panel
 import { type SerializableCourse } from '@/pages/index';
 
 type AdminView = 'list-courses' | 'manage-users' | 'create-course' | 'edit-course' | 'courses' | 'users';
 
+// New type for the JSON-safe User object 
+export type SerializableUser = Omit<UserType, 'emailVerified' | 'lastSeen' | 'createdAt'> & {
+    emailVerified: string | null;
+    lastSeen: string | null;
+    createdAt: string; // createdAt not nullable in schema
+};
+
 type AdminPageProps = {
     view: AdminView;
     courses?: SerializableCourse[];
-    users?: User[];
+    users?: SerializableUser[];
     totalPages: number;
     currentPage: number;
 };
 
-
 const AdminPage = ({ view: initialView, courses, users, totalPages, currentPage }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [view, setView] = useState<AdminView>(initialView);
     const [courseToEdit, setCourseToEdit] = useState<SerializableCourse | null>(null);
-
     const router = useRouter();
 
     const handleTabChange = (tab: 'courses' | 'users') => {
@@ -146,14 +151,17 @@ export const getServerSideProps: GetServerSideProps<AdminPageProps> = async (con
         // Serialize data objects for users
         const serializableUsers = users.map(user => ({
             ...user,
+            //.toISOString() handles potentially null values
+            // TODO: serialize all needed fields here
             emailVerified: user.emailVerified?.toISOString() || null,
             lastSeen: user.lastSeen?.toISOString() || null,
+            createdAt: user.createdAt.toISOString(),            
         }));
 
         return {
             props: {
                 view: 'users',
-                users: serializableUsers as User[],
+                users: serializableUsers as SerializableUser[],
                 totalPages: Math.ceil(totalUsers / pageSize),
                 currentPage: page,
             } as AdminPageProps,
