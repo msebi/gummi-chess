@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { signIn } from 'next-auth/react'; 
+import { useRouter } from 'next/router';
 import  GoogleSignInButton  from "./ReactGoogleSignInButton";
 
 const SignInFormComponent = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('')
+    const [error, setError] = useState('');
+    const router = useRouter();
 
     const handleCredentialsSignIn = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -19,7 +21,13 @@ const SignInFormComponent = () => {
         });
 
         if (result?.error) {
-            setError('Invalid email or password');
+            // Check for banned user (look for "banned" in the response)
+            if (result.error.includes("banned")) {
+                // Redirect to the banned page
+                router.push(`/banned?name=${encodeURIComponent(email)}`);
+            } else {
+                setError('Invalid email or password');
+            }            
         } else  if (result?.ok){
             // Redirect to the homepage 
             window.location.href = '/';

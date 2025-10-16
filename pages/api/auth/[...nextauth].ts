@@ -1,13 +1,15 @@
-import NextAuth from 'next-auth';
+import NextAuth, { AuthOptions, User, Account, Profile }  from 'next-auth';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import GoogleProvider from 'next-auth/providers/google';
 import CredentialsProvider from 'next-auth/providers/credentials';
 // Import the types we need
-import { type User } from 'next-auth';
+// import { type User } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import { Session } from 'next-auth';
 
 import { compare } from 'bcryptjs';
+
+import { User as UserType } from '@/generated/prisma/client';
 
 // Import the singleton instance of PrismaClient
 import prisma from '@/lib/prisma';
@@ -56,9 +58,30 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: '/login', // Redirect to our custom login page
+    // Define custom error page 
+    // Redirect to login page with an error query param 
+    error: '/login', 
   },
 
   callbacks: {
+    async signIn({ user: user, account: account }: { user: User, account: Account | null}) {
+      // This callback runs for all sign-ins, including OAuth (Google) and credentials
+      if (account?.provider === 'credentials' || account?.provider === 'google') {
+        const dbUser = await prisma.user.findUnique({ where: { email: user.email! } }); 
+
+        // If the user exists in the db and is banned, prevent sign in
+        if (dbUser?.isBanned) {
+          // If banned return path to banned page
+          // This will trigger a server-side redirect
+          const bannedUrl = `/banned?name=${encodeURIComponent(dbUser.email || 'this account')}`;
+          return bannedUrl; 
+        }
+      }
+
+      // If not banned or a new user allow sign up 
+      return true;
+    },
+
     // This callback is called whenever a JWT is created or updated 
     jwt({ token, user }: { token: JWT, user?: User}){
       if (user) {
