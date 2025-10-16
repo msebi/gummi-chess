@@ -35,7 +35,6 @@ export const ReactAdminCourseComponentGridContainer: React.FC<Props> = ({ course
                     baseUrl="/admin"
                     variant="style-2"
                 />
-
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

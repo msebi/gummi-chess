@@ -27,7 +27,282 @@ async function seedTestDb() {
         },
     });
 
-    console.log('Created users:', { adminUser, regularUser });
+    const userSabrina = await prisma.user.create({
+        data: {
+            email: 'sabrina@gmx.de',
+            name: 'Sabrina',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userPranjal = await prisma.user.create({
+        data: {
+            email: 'Pranjal@gmail.com',
+            name: 'Pranjal',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });    
+
+    const userSalve = await prisma.user.create({
+        data: {
+            email: 'Salve@gmail.in',
+            name: 'Salve',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });   
+
+    const userPrateek = await prisma.user.create({
+        data: {
+            email: 'prateek@gmail.in',
+            name: 'Prateek',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userYugant = await prisma.user.create({
+        data: {
+            email: 'yugant@gmail.com',
+            name: 'Yugant',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });    
+
+    const userEvelyn = await prisma.user.create({
+        data: {
+            email: 'evelyn@gmail.in',
+            name: 'Evelyn',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userCaro = await prisma.user.create({
+        data: {
+            email: 'caro@gmail.de',
+            name: 'Caro',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userUpasna = await prisma.user.create({
+        data: {
+            email: 'upasna@gmail.de',
+            name: 'Upasna',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });    
+
+    const userBabsi = await prisma.user.create({
+        data: {
+            email: 'babsi@gmail.de',
+            name: 'Babsi',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userAlex = await prisma.user.create({
+        data: {
+            email: 'alex@gmail.de',
+            name: 'Alex',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userMonty = await prisma.user.create({
+        data: {
+            email: 'monty@gmail.in',
+            name: 'Monty',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userGabriel = await prisma.user.create({
+        data: {
+            email: 'gabriel@gmail.de',
+            name: 'Gabriel',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userDaniel = await prisma.user.create({
+        data: {
+            email: 'daniel@gmail.com',
+            name: 'Daniel',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userSirCp = await prisma.user.create({
+        data: {
+            email: 'sircp@gmail.in',
+            name: 'SirCp',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });    
+
+    const userSadhana = await prisma.user.create({
+        data: {
+            email: 'sadhana@gmail.in',
+            name: 'Sadhana',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userKalpana = await prisma.user.create({
+        data: {
+            email: 'kalpana@gmail.in',
+            name: 'Kalpana',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });    
+
+    const userNischal = await prisma.user.create({
+        data: {
+            email: 'nischal@gmail.de',
+            name: 'Nischal',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userArnav = await prisma.user.create({
+        data: {
+            email: 'arnav@gmail.com',
+            name: 'Aarnav',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userIvan = await prisma.user.create({
+        data: {
+            email: 'ivan@gmail.fr',
+            name: 'Ivan',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });    
+
+    const userGovi = await prisma.user.create({
+        data: {
+            email: 'govi@gmail.de',
+            name: 'Govi',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });    
+
+    const userGanesh = await prisma.user.create({
+        data: {
+            email: 'Ganesh@gmail.hl',
+            name: 'Ganesh',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });    
+
+    const userAmbika = await prisma.user.create({
+        data: {
+            email: 'ambika@gmail.de',
+            name: 'Ambika',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userSena = await prisma.user.create({
+        data: {
+            email: 'sena@gmail.de',
+            name: 'Sena',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });   
+
+    const userPrem = await prisma.user.create({
+        data: {
+            email: 'prem@gmail.de',
+            name: 'Prem',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userMahesh = await prisma.user.create({
+        data: {
+            email: 'mahesh@gmail.de',
+            name: 'Mahesh',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userVaishali = await prisma.user.create({
+        data: {
+            email: 'vaishali@gmail.de',
+            name: 'Vaishali',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userOlaf = await prisma.user.create({
+        data: {
+            email: 'olaf@gmail.de',
+            name: 'Olaf',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userMargaret = await prisma.user.create({
+        data: {
+            email: 'margaret@gmail.com',
+            name: 'Margaret',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userGita = await prisma.user.create({
+        data: {
+            email: 'gita@gmail.com',
+            name: 'Gita',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });
+
+    const userDennis = await prisma.user.create({
+        data: {
+            email: 'dennis@gmail.in',
+            name: 'Dennis',
+            passwordHash: userPassword,
+            isAdmin: false,
+        },
+    });    
+
+    console.log('Created users:', { adminUser, regularUser, userSabrina, userPranjal, userSalve, userPrateek, 
+                                    userYugant, userIvan, userGovi, userUpasna, userBabsi, userAlex, userMonty,
+                                    userGabriel, userDaniel, userSirCp, userSadhana, userKalpana, userNischal, 
+                                    userArnav, userGanesh, userCaro, userEvelyn, userAmbika, userSena, userPrem, 
+                                    userMahesh, userVaishali, userOlaf, userMargaret, userGita, userDennis 
+                                    });
 
     const tagOpening = await prisma.tag.create({ data : {name: 'Opening'} });
     const tagMiddleGame = await prisma.tag.create({ data: {name: 'Middlegame'} });

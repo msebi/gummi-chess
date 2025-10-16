@@ -13,7 +13,7 @@ import { ReactAdminUserListComponent } from '@/components/admin/ReactAdminUserLi
 
 import { SerializableCourse, SerializableUser } from '@/types/index';
 
-type AdminView = 'list-courses' | 'manage-users' | 'create-course' | 'edit-course' | 'courses' | 'users';
+type AdminView = 'list-courses' | 'manage-users' | 'create-course' | 'edit-course' | 'courses' | 'edit-user' | 'create-user' | 'users';
 
 type AdminPageProps = {
     view: AdminView;
@@ -26,20 +26,31 @@ type AdminPageProps = {
 const AdminPage = ({ view: initialView, courses, users, totalPages, currentPage }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const [view, setView] = useState<AdminView>(initialView);
     const [courseToEdit, setCourseToEdit] = useState<SerializableCourse | null>(null);
+    const [userToEdit, setUserToEdit] = useState<SerializableUser | null>(null);
     const router = useRouter();
 
     const handleTabChange = (tab: 'courses' | 'users') => {
         router.push(`/admin?tab=${tab}`);
     };
 
-    const handleEdit = (course: SerializableCourse) => {
+    const handleCourseEdit = (course: SerializableCourse) => {
         setCourseToEdit(course);
         setView('edit-course');
     };
 
-    const handleCancel = () => {
+    const handleUserEdit = (user: SerializableUser) => {
+        setUserToEdit(user);
+        setView('edit-user');
+    };
+
+    const handleCourseCancel = () => {
         setCourseToEdit(null);
         setView('list-courses');
+    };
+
+    const handleUserCancel = (user: SerializableUser) => {
+        setUserToEdit(null);
+        setView('users');
     };
 
     // This function would be called by the form after a successful save
@@ -80,20 +91,27 @@ const AdminPage = ({ view: initialView, courses, users, totalPages, currentPage 
                         totalPages={totalPages}
                         currentPage={currentPage}
                         onAdd={() => setView('create-course')}
-                        onEdit={handleEdit}
+                        onEdit={handleCourseEdit}
                         onDeleteSuccess={handleSave} // Reload data after delete
                     />
                 )}
 
                 {initialView === 'users' && users && (
-                    <ReactAdminUserListComponent users={users} />
+                    <ReactAdminUserListComponent 
+                        users={users} 
+                        totalPages={totalPages}
+                        currentPage={currentPage}
+                        onAdd={() => setView('create-user')}
+                        onEdit={handleUserEdit}
+                        onDeleteSuccess={handleSave}
+                    />
                     // TODO: add pagination
                 )}
 
                 {view === 'create-course' && (
                     <ReactAdminCreateCourseComponent
                         onSave={handleSave}
-                        onCancel={handleCancel}
+                        onCancel={handleCourseCancel}
                     />
                 )}
 
@@ -101,7 +119,7 @@ const AdminPage = ({ view: initialView, courses, users, totalPages, currentPage 
                     <ReactAdminCreateCourseComponent
                         initialData={courseToEdit}
                         onSave={handleSave}
-                        onCancel={handleCancel}
+                        onCancel={handleCourseCancel}
                     />
                 )}
 

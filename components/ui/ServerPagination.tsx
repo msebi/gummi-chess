@@ -87,7 +87,6 @@ const ServerPagination: React.FC<ServerPaginationProps> = ({
           </Link>
         </li>
       </ul>
-      {/* --- END OF FIX --- */}
     </nav>
   );
 };
