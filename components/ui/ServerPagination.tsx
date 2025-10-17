@@ -36,13 +36,11 @@ const ServerPagination: React.FC<ServerPaginationProps> = ({
 
   return (
     <nav className={clsx(styles.serverPagination, variant && styles[variant])}>
-      {/* --- THIS IS THE FIX --- */}
-      <ul className={styles.paginationUL}> {/* Changed paginationUrl to paginationUL */}
+      <ul className={styles.paginationUL}> 
         {/* Previous Button */}
         <li className={styles.pageItem}>
-          {/* Corrected clsx syntax for conditional classes */}
           <Link
-            href={currentPage > 1 ? `${baseUrl}?page=${currentPage - 1}` : '#'}
+            href={currentPage > 1 ? `${baseUrl}/${currentPage - 1}` : '#'}
             className={clsx(
               styles.pageButton,
               styles.leftNavigation, 
@@ -62,7 +60,7 @@ const ServerPagination: React.FC<ServerPaginationProps> = ({
               <span className={clsx(styles.pageButton, styles.disabled)}>...</span>
             ) : (
               <Link 
-                href={`${baseUrl}?page=${num}`} 
+                href={`${baseUrl}/${num}`} 
                 className={clsx(styles.pageButton, { [styles.activeButton]: currentPage === num })}
               >
                 {num}
@@ -74,7 +72,7 @@ const ServerPagination: React.FC<ServerPaginationProps> = ({
         {/* Next Button */}
         <li className={styles.pageItem}>
           <Link 
-            href={currentPage < totalPages ? `${baseUrl}?page=${currentPage + 1}` : '#'} 
+            href={currentPage < totalPages ? `${baseUrl}/${currentPage + 1}` : '#'} 
             className={clsx(
               styles.pageButton, 
               styles.rightNavigation,

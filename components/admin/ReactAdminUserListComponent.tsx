@@ -26,7 +26,7 @@ export const ReactAdminUserListComponent: React.FC<Props> = ({ users,
                 <ServerPagination 
                     totalPages={totalPages}
                     currentPage={currentPage}
-                    baseUrl="/admin"
+                    baseUrl="/admin/users"
                     variant="style-2"
                 />
             </div>

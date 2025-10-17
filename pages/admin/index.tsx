@@ -1,209 +1,227 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../api/auth/[...nextauth]';
-import prisma from '@/lib/prisma';
+import { GetServerSideProps } from 'next';
 
-import ReactHeaderComponent from '@/components/ReactHeaderComponent';
-import ReactFooterComponent from '@/components/ReactFooterComponent';
-import { ReactAdminCourseComponentGridContainer } from '@/components/admin/ReactAdminCourseComponentGridContainer';
-import { ReactAdminCreateCourseComponent } from '@/components/admin/ReactAdminCreateCourseComponent';
-import { ReactAdminUserListComponent } from '@/components/admin/ReactAdminUserListComponent';
-
-import { SerializableCourse, SerializableUser } from '@/types/index';
-
-type AdminView = 'list-courses' | 'manage-users' | 'create-course' | 'edit-course' | 'courses' | 'edit-user' | 'create-user' | 'users';
-
-type AdminPageProps = {
-    view: AdminView;
-    courses?: SerializableCourse[];
-    users?: SerializableUser[];
-    totalPages: number;
-    currentPage: number;
+const AdminIndexRedirect = () => {
+    return null; // This page will never be rendered
 };
 
-const AdminPage = ({ view: initialView, courses, users, totalPages, currentPage }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-    const [view, setView] = useState<AdminView>(initialView);
-    const [courseToEdit, setCourseToEdit] = useState<SerializableCourse | null>(null);
-    const [userToEdit, setUserToEdit] = useState<SerializableUser | null>(null);
-    const router = useRouter();
-
-    const handleTabChange = (tab: 'courses' | 'users') => {
-        router.push(`/admin?tab=${tab}`);
+export const getServerSideProps: GetServerSideProps = async () => {
+    return {
+        redirect: {
+            destination: "/admin/courses", // Default admin page
+            permanent: true,
+        },
     };
-
-    const handleCourseEdit = (course: SerializableCourse) => {
-        setCourseToEdit(course);
-        setView('edit-course');
-    };
-
-    const handleUserEdit = (user: SerializableUser) => {
-        setUserToEdit(user);
-        setView('edit-user');
-    };
-
-    const handleCourseCancel = () => {
-        setCourseToEdit(null);
-        setView('list-courses');
-    };
-
-    const handleUserCancel = (user: SerializableUser) => {
-        setUserToEdit(null);
-        setView('users');
-    };
-
-    // This function would be called by the form after a successful save
-    const handleSave = () => {
-        // TODO: change to fetch changes
-        // In a real app, you'd use a data fetching library like SWR or React Query to re-fetch
-        // For now, a simple page reload is the easiest way.
-        window.location.reload();
-    };
-
-    return (
-        <div className="flex flex-col min-h-screen">
-            <ReactHeaderComponent />
-            <main className="flex-grow container mx-auto p-4">
-                <h1 className="text-3xl font-bold mb-4">
-                    Administration
-                </h1>
-                {/* Placeholder for ReactAdministrationMenuComponent */}
-                <div className="flex border-b mb-4">
-                    <button
-                        onClick={() => handleTabChange('courses')}
-                        className={`py-2 px-4 ${initialView === 'courses' ? 'border-b-2 border-blue-500 font-semibold' : ''}`}
-                    >
-                        Manage Courses
-                    </button>
-                    <button
-                        onClick={() => handleTabChange('users')}
-                        className={`py-2 px-4 ${initialView === 'users' ? 'border-b-2 border-blue-500 font-semibold' : ''}`}
-                    >
-                        Manage Users
-                    </button>
-                </div>
-
-                {/* Conditional Rendering of Views */}
-                {initialView === 'courses' && courses && (
-                    <ReactAdminCourseComponentGridContainer
-                        courses={courses}
-                        totalPages={totalPages}
-                        currentPage={currentPage}
-                        onAdd={() => setView('create-course')}
-                        onEdit={handleCourseEdit}
-                        onDeleteSuccess={handleSave} // Reload data after delete
-                    />
-                )}
-
-                {initialView === 'users' && users && (
-                    <ReactAdminUserListComponent 
-                        users={users} 
-                        totalPages={totalPages}
-                        currentPage={currentPage}
-                        onAdd={() => setView('create-user')}
-                        onEdit={handleUserEdit}
-                        onDeleteSuccess={handleSave}
-                    />
-                    // TODO: add pagination
-                )}
-
-                {view === 'create-course' && (
-                    <ReactAdminCreateCourseComponent
-                        onSave={handleSave}
-                        onCancel={handleCourseCancel}
-                    />
-                )}
-
-                {view === 'edit-course' && courseToEdit && (
-                    <ReactAdminCreateCourseComponent
-                        initialData={courseToEdit}
-                        onSave={handleSave}
-                        onCancel={handleCourseCancel}
-                    />
-                )}
-
-            </main>
-            <ReactFooterComponent />
-        </div>
-    );
 };
 
-export const getServerSideProps: GetServerSideProps<AdminPageProps> = async (context) => {
-    const session = await getServerSession(context.req, context.res, authOptions);
+export default AdminIndexRedirect; 
 
-    // 1. Auth Check
-    if (!session || !session.user?.isAdmin) {
-        return {
-            redirect: {
-                destination: '/api/auth/signin', // Or a custom unauthorized page
-                permanent: false,
-            }
-        };
-    }
+// TODO: cleanup
+// import { useState } from 'react';
+// import { useRouter } from 'next/router';
+// import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
+// import { getServerSession } from 'next-auth';
+// import { authOptions } from '../api/auth/[...nextauth]';
+// import prisma from '@/lib/prisma';
 
-    // 2. Data Fetching & Pagination 
-    const tab = context.query.tab === 'users' ? 'users' : 'courses';
-    const page = context.query.page ? parseInt(context.query.page as string, 10) : 1;
-    const pageSize = 10; // Show 10 courses per page
+// import ReactHeaderComponent from '@/components/ReactHeaderComponent';
+// import ReactFooterComponent from '@/components/ReactFooterComponent';
+// import { ReactAdminCourseComponentGridContainer } from '@/components/admin/ReactAdminCourseComponentGridContainer';
+// import { ReactAdminCreateCourseComponent } from '@/components/admin/ReactAdminCreateCourseComponent';
+// import { ReactAdminUserListComponent } from '@/components/admin/ReactAdminUserListComponent';
 
-    if (tab === 'users') {
-        const users = await prisma.user.findMany({
-            skip: (page - 1) * pageSize,
-            take: pageSize,
-            orderBy: { name: 'asc' }
-        });
+// import { SerializableCourse, SerializableUser } from '@/types/index';
 
-        const totalUsers = await prisma.user.count();
+// type AdminView = 'list-courses' | 'manage-users' | 'create-course' | 'edit-course' | 'courses' | 'edit-user' | 'create-user' | 'users';
 
-        // Serialize data objects for users
-        const serializableUsers = users.map(user => ({
-            ...user,
-            //.toISOString() handles potentially null values
-            // TODO: serialize all needed fields here
-            emailVerified: user.emailVerified?.toISOString() || null,
-            lastSeen: user.lastSeen?.toISOString() || null,
-            createdAt: user.createdAt.toISOString(),            
-        }));
+// type AdminPageProps = {
+//     view: AdminView;
+//     courses?: SerializableCourse[];
+//     users?: SerializableUser[];
+//     totalPages: number;
+//     currentPage: number;
+// };
 
-        return {
-            props: {
-                view: 'users',
-                users: serializableUsers as SerializableUser[],
-                totalPages: Math.ceil(totalUsers / pageSize),
-                currentPage: page,
-            } as AdminPageProps,
-        };
-    } else {
-        // Default to courses
-        const courses = await prisma.course.findMany({
-            skip: (page - 1) * pageSize,
-            take: pageSize,
-            orderBy: { createdAt: 'desc' },
-            include: { tags: { include: { tag: true } }, keyPositions: true },
-        });
+// const AdminPage = ({ view: initialView, courses, users, totalPages, currentPage }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+//     const [view, setView] = useState<AdminView>(initialView);
+//     const [courseToEdit, setCourseToEdit] = useState<SerializableCourse | null>(null);
+//     const [userToEdit, setUserToEdit] = useState<SerializableUser | null>(null);
+//     const router = useRouter();
 
-        const totalCourses = await prisma.course.count();
+//     const handleTabChange = (tab: 'courses' | 'users') => {
+//         router.push(`/admin?tab=${tab}`);
+//     };
 
-        // 3. Serialize Data
-        const serializableCourses = courses.map((course) => ({
-            ...course,
-            price: course.price.toNumber(),
-            createdAt: course.createdAt.toISOString(),
-            updatedAt: course.updatedAt.toISOString(),
-        }));
+//     const handleCourseEdit = (course: SerializableCourse) => {
+//         setCourseToEdit(course);
+//         setView('edit-course');
+//     };
 
-        return {
-            props: {
-                view: 'courses',
-                courses: serializableCourses,
-                totalPages: Math.ceil(totalCourses / pageSize),
-                currentPage: page,
-            } as AdminPageProps,
-        };
-    }
-};
+//     const handleUserEdit = (user: SerializableUser) => {
+//         setUserToEdit(user);
+//         setView('edit-user');
+//     };
 
-export default AdminPage;
+//     const handleCourseCancel = () => {
+//         setCourseToEdit(null);
+//         setView('list-courses');
+//     };
+
+//     const handleUserCancel = (user: SerializableUser) => {
+//         setUserToEdit(null);
+//         setView('users');
+//     };
+
+//     // This function would be called by the form after a successful save
+//     const handleSave = () => {
+//         // TODO: change to fetch changes
+//         // In a real app, you'd use a data fetching library like SWR or React Query to re-fetch
+//         // For now, a simple page reload is the easiest way.
+//         window.location.reload();
+//     };
+
+//     return (
+//         <div className="flex flex-col min-h-screen">
+//             <ReactHeaderComponent />
+//             <main className="flex-grow container mx-auto p-4">
+//                 <h1 className="text-3xl font-bold mb-4">
+//                     Administration
+//                 </h1>
+//                 {/* Placeholder for ReactAdministrationMenuComponent */}
+//                 <div className="flex border-b mb-4">
+//                     <button
+//                         onClick={() => handleTabChange('courses')}
+//                         className={`py-2 px-4 ${initialView === 'courses' ? 'border-b-2 border-blue-500 font-semibold' : ''}`}
+//                     >
+//                         Manage Courses
+//                     </button>
+//                     <button
+//                         onClick={() => handleTabChange('users')}
+//                         className={`py-2 px-4 ${initialView === 'users' ? 'border-b-2 border-blue-500 font-semibold' : ''}`}
+//                     >
+//                         Manage Users
+//                     </button>
+//                 </div>
+
+//                 {/* Conditional Rendering of Views */}
+//                 {initialView === 'courses' && courses && (
+//                     <ReactAdminCourseComponentGridContainer
+//                         courses={courses}
+//                         totalPages={totalPages}
+//                         currentPage={currentPage}
+//                         onAdd={() => setView('create-course')}
+//                         onEdit={handleCourseEdit}
+//                         onDeleteSuccess={handleSave} // Reload data after delete
+//                     />
+//                 )}
+
+//                 {initialView === 'users' && users && (
+//                     <ReactAdminUserListComponent 
+//                         users={users} 
+//                         totalPages={totalPages}
+//                         currentPage={currentPage}
+//                         onAdd={() => setView('create-user')}
+//                         onEdit={handleUserEdit}
+//                         onDeleteSuccess={handleSave}
+//                     />
+//                     // TODO: add pagination
+//                 )}
+
+//                 {view === 'create-course' && (
+//                     <ReactAdminCreateCourseComponent
+//                         onSave={handleSave}
+//                         onCancel={handleCourseCancel}
+//                     />
+//                 )}
+
+//                 {view === 'edit-course' && courseToEdit && (
+//                     <ReactAdminCreateCourseComponent
+//                         initialData={courseToEdit}
+//                         onSave={handleSave}
+//                         onCancel={handleCourseCancel}
+//                     />
+//                 )}
+
+//             </main>
+//             <ReactFooterComponent />
+//         </div>
+//     );
+// };
+
+// export const getServerSideProps: GetServerSideProps<AdminPageProps> = async (context) => {
+//     const session = await getServerSession(context.req, context.res, authOptions);
+
+//     // 1. Auth Check
+//     if (!session || !session.user?.isAdmin) {
+//         return {
+//             redirect: {
+//                 destination: '/api/auth/signin', // Or a custom unauthorized page
+//                 permanent: false,
+//             }
+//         };
+//     }
+
+//     // 2. Data Fetching & Pagination 
+//     const tab = context.query.tab === 'users' ? 'users' : 'courses';
+//     const page = context.query.page ? parseInt(context.query.page as string, 10) : 1;
+//     const pageSize = 10; // Show 10 courses per page
+
+//     if (tab === 'users') {
+//         const users = await prisma.user.findMany({
+//             skip: (page - 1) * pageSize,
+//             take: pageSize,
+//             orderBy: { name: 'asc' }
+//         });
+
+//         const totalUsers = await prisma.user.count();
+
+//         // Serialize data objects for users
+//         const serializableUsers = users.map(user => ({
+//             ...user,
+//             //.toISOString() handles potentially null values
+//             // TODO: serialize all needed fields here
+//             emailVerified: user.emailVerified?.toISOString() || null,
+//             lastSeen: user.lastSeen?.toISOString() || null,
+//             createdAt: user.createdAt.toISOString(),            
+//         }));
+
+//         return {
+//             props: {
+//                 view: 'users',
+//                 users: serializableUsers as SerializableUser[],
+//                 totalPages: Math.ceil(totalUsers / pageSize),
+//                 currentPage: page,
+//             } as AdminPageProps,
+//         };
+//     } else {
+//         // Default to courses
+//         const courses = await prisma.course.findMany({
+//             skip: (page - 1) * pageSize,
+//             take: pageSize,
+//             orderBy: { createdAt: 'desc' },
+//             include: { tags: { include: { tag: true } }, keyPositions: true },
+//         });
+
+//         const totalCourses = await prisma.course.count();
+
+//         // 3. Serialize Data
+//         const serializableCourses = courses.map((course) => ({
+//             ...course,
+//             price: course.price.toNumber(),
+//             createdAt: course.createdAt.toISOString(),
+//             updatedAt: course.updatedAt.toISOString(),
+//         }));
+
+//         return {
+//             props: {
+//                 view: 'courses',
+//                 courses: serializableCourses,
+//                 totalPages: Math.ceil(totalCourses / pageSize),
+//                 currentPage: page,
+//             } as AdminPageProps,
+//         };
+//     }
+// };
+
+// export default AdminPage;
 
 

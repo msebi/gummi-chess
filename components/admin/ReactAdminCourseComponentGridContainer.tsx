@@ -32,7 +32,7 @@ export const ReactAdminCourseComponentGridContainer: React.FC<Props> = ({ course
                 <ServerPagination 
                     totalPages={totalPages}
                     currentPage={currentPage}
-                    baseUrl="/admin"
+                    baseUrl="/admin/courses"
                     variant="style-2"
                 />
             </div>

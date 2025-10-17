@@ -73,7 +73,6 @@ const fetchUserDetails = async (id: string) => {
     };
 };
 
-
 const UserAdminPage = ({ userDetails }: { userDetails: UserDetailsProps | null}) => {
     const router = useRouter();
 
@@ -154,16 +153,23 @@ const UserAdminPage = ({ userDetails }: { userDetails: UserDetailsProps | null})
                     <div className="mt-8 pt-6 border-t flex justify-center gap-4">
                         <button
                             onClick={() => handleUpdate({ isAdmin: !userDetails.isAdmin })}
-                            className="bg-blue-500 text-white py-2 px-4 rounded">
+                            className="bg-blue-500 over:bg-blue-700 font-bold text-white 
+                                         py-2 px-4 rounded shadow-lg transition-transform hover:scale-105">
                             {userDetails.isAdmin ? "Revoke Admin" : "Make Admin"}
                         </button>
                         <button
                             onClick={() => handleUpdate({ isBanned: !userDetails.isBanned })}
-                            className="bg-yellow-500 text-white py-2 px-4 rounded">
+                            className="bg-yellow-500 over:bg-yellow-700 font-bold text-white 
+                                         py-2 px-4 rounded shadow-lg transition-transform hover:scale-105">
                             {userDetails.isBanned ? "Unban User" : "Ban User"}
                         </button>
-                        <button onClick={() => handleDelete()} className="bg-red-500 text-white py-2 px-4 rounded">Delete</button>
-                        <button className="bg-blue-500 text-white py-2 px-4 rounded">Save Changes</button>
+                        <button 
+                            onClick={() => handleDelete()} 
+                            className="bg-red-500 over:bg-red-700 font-bold text-white 
+                                         py-2 px-4 rounded shadow-lg transition-transform hover:scale-105">Delete</button>
+                        {/* TODO: handle redirect here */}
+                        <button className="bg-blue-500 over:bg-blue-700 font-bold text-white 
+                                            py-2 px-4 rounded shadow-lg transition-transform hover:scale-105">Save Changes</button>
                     </div>
                 </div>
             </main>
