@@ -8,6 +8,7 @@ type ServerPaginationProps = {
   totalPages: number;
   currentPage: number;
   baseUrl: string;
+  addStartingSlash: boolean | false;
   variant?: 'style-1' | 'style-2'; // Optional variant prop for styling
 };
 
@@ -15,6 +16,7 @@ const ServerPagination: React.FC<ServerPaginationProps> = ({
   totalPages,
   currentPage,
   baseUrl,
+  addStartingSlash,
   variant,
 }) => {
   if (totalPages <= 1) return null;
@@ -32,6 +34,10 @@ const ServerPagination: React.FC<ServerPaginationProps> = ({
     return range;
   };
 
+  const previousPaginationUrl = addStartingSlash ? `${baseUrl}/${currentPage - 1}` : `${baseUrl}${currentPage - 1}`;  
+  const pageNumbersPaginationUrl = addStartingSlash ? `${baseUrl}/` : `${baseUrl}`;
+  const nextPaginationUrl = addStartingSlash ? `${baseUrl}/${currentPage + 1}` : `${baseUrl}${currentPage + 1}`;
+
   const pageNumbers = getPaginationRange();
 
   return (
@@ -40,7 +46,7 @@ const ServerPagination: React.FC<ServerPaginationProps> = ({
         {/* Previous Button */}
         <li className={styles.pageItem}>
           <Link
-            href={currentPage > 1 ? `${baseUrl}/${currentPage - 1}` : '#'}
+            href={currentPage > 1 ? previousPaginationUrl : '#'}
             className={clsx(
               styles.pageButton,
               styles.leftNavigation, 
@@ -60,7 +66,7 @@ const ServerPagination: React.FC<ServerPaginationProps> = ({
               <span className={clsx(styles.pageButton, styles.disabled)}>...</span>
             ) : (
               <Link 
-                href={`${baseUrl}/${num}`} 
+                href={`${pageNumbersPaginationUrl}${num}`} 
                 className={clsx(styles.pageButton, { [styles.activeButton]: currentPage === num })}
               >
                 {num}
@@ -72,7 +78,7 @@ const ServerPagination: React.FC<ServerPaginationProps> = ({
         {/* Next Button */}
         <li className={styles.pageItem}>
           <Link 
-            href={currentPage < totalPages ? `${baseUrl}/${currentPage + 1}` : '#'} 
+            href={currentPage < totalPages ? nextPaginationUrl : '#'} 
             className={clsx(
               styles.pageButton, 
               styles.rightNavigation,

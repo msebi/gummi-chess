@@ -32,6 +32,7 @@ export const ReactAdminCourseComponentGridContainer: React.FC<Props> = ({ course
                 <ServerPagination 
                     totalPages={totalPages}
                     currentPage={currentPage}
+                    addStartingSlash={true}
                     baseUrl="/admin/courses"
                     variant="style-2"
                 />
@@ -56,6 +57,7 @@ export const ReactAdminCourseComponentGridContainer: React.FC<Props> = ({ course
                 <ServerPagination 
                     totalPages={totalPages}
                     currentPage={currentPage}
+                    addStartingSlash={true}
                     baseUrl="/admin"
                     variant="style-2"
                 />

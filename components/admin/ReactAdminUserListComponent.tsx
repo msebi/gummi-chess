@@ -6,17 +6,11 @@ type Props = {
     users: SerializableUser[];
     totalPages: number; 
     currentPage: number;
-    onAdd: () => void;
-    onEdit: (user: SerializableUser) => void;
-    onDeleteSuccess: () => void;
 };
 
 export const ReactAdminUserListComponent: React.FC<Props> = ({ users,
                                                                totalPages,
                                                                currentPage,
-                                                               onAdd,
-                                                               onEdit,
-                                                               onDeleteSuccess
                                                                }) => {
     return (
         <div className="bg-white p-6 rounded-lg shadow-md">
@@ -26,7 +20,8 @@ export const ReactAdminUserListComponent: React.FC<Props> = ({ users,
                 <ServerPagination 
                     totalPages={totalPages}
                     currentPage={currentPage}
-                    baseUrl="/admin/users"
+                    addStartingSlash={false}
+                    baseUrl="/admin/users?page="
                     variant="style-2"
                 />
             </div>
@@ -66,15 +61,18 @@ export const ReactAdminUserListComponent: React.FC<Props> = ({ users,
                 <ServerPagination 
                     totalPages={totalPages}
                     currentPage={currentPage}
-                    baseUrl="/admin"
+                    addStartingSlash={false}
+                    baseUrl="/admin/users"
                     variant="style-2"
                 />
             </div>
                         
             <div className="mt-6 text-center">
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Add new User            
-                </button>
+                <Link href="/admin/users/new">
+                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        Add new User            
+                    </button>
+                </Link>
             </div>
         </div>
     );
