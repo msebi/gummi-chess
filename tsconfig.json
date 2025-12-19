@@ -33,6 +33,6 @@
               "**/*.tsx", 
               ".next/types/**/*.ts",
               "types/**/*.d.ts"
-],
+, "prisma.config.js"],
   "exclude": ["node_modules"]
 }
