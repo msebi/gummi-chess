@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactLogoComponent from './icons/ReactLogoComponent';
-import type { IconType } from '@/node_modules/react-icons/lib/index';
+// import type { IconType } from '@/node_modules/react-icons/lib/index';
+import type { IconType } from 'react-icons';
 
 export interface Social {
     platform: string;
