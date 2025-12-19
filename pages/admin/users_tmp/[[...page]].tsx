@@ -35,9 +35,6 @@ const ManageUsersPage = ({ users, totalPages, currentPage }: ManageUsersPageProp
                 users={users} 
                 totalPages={totalPages}
                 currentPage={currentPage}
-                onAdd={() => ({})}
-                onEdit={handleUserEdit}
-                onDeleteSuccess={handleSave}
             />
         </AdminLayout>
     );
