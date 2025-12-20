@@ -4,11 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build ",
+    "build": "prisma generate && prisma migrate deploy && next build",
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate",
-    "db:reset": "npx prisma db push --force-reset && npx prisma db seed"
+    "db:reset": "npx prisma migrate reset && npx prisma db seed"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
