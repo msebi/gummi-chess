@@ -6,9 +6,6 @@ type Props = {
     users: SerializableUser[];
     totalPages: number;
     currentPage: number;
-    onAdd: () => void;
-    onEdit: (user: SerializableUser) => void;
-    onDeleteSuccess: () => void;
 };
 
 export const ReactAdminUserListComponent: React.FC<Props> = ({ users,

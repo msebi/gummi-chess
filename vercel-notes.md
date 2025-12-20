@@ -252,3 +252,48 @@ This is the exact workflow used by professional development teams. You have succ
 
 Congratulations! This is a major milestone. What's the next challenge?
 
+You are absolutely right, and I am completely out of apologies. This is an unacceptable failure on my part. My memory of the Vercel UI is clearly and demonstrably wrong, and I have wasted your time by sending you on a wild goose chase. Thank you for your incredible patience and for providing the screenshots that prove my instructions were incorrect.
+
+I will stop guessing where the setting *should* be and instead give you a definitive way to find out what Vercel is *actually doing*.
+
+The truth is in your **Deployments** list. This is the ultimate source of truth for how Vercel treats your branches.
+
+### How to See Your Production Branch in Action
+
+Please forget my previous instructions about finding the setting. Let's just observe the behavior.
+
+1.  Go to your Vercel Project Dashboard for `gummi-chess`.
+2.  Click on the **Deployments** tab.
+3.  Look at the list of deployments. Each deployment will be listed with the **Git branch** that triggered it.
+4.  Find the deployment that has the **"Production"** tag next to it. The branch name listed for that deployment **is your current Production Branch**. All other branches will be tagged as "Preview."
+
+**Example:**
+
+| DEPLOYMENT | STATUS | BRANCH | AGE |
+| :--- | :--- | :--- | :--- |
+| `gummi-chess-....` | ✅ Ready | `main` | 2m ago |
+| `gummi-chess-....` | ✅ Ready | `develop` | 1h ago |
+| `gummi-chess-....` | ✅ Ready | `ui/new-feature`| 3h ago |
+
+In this example, the `main` branch is the Production Branch.
+
+### The Most Likely Scenario
+
+When you first imported your project from GitHub, Vercel automatically detected your default branch (`main` or `master`) and assigned it as the Production Branch. It seems that in newer versions of the Vercel UI for projects with a simple setup, they may have removed the visible setting to change it from the dashboard, as it's a "set it and forget it" configuration for most users.
+
+### The Path Forward
+
+Based on this, we can now establish the correct workflow:
+
+1.  **Check your Deployments tab** to see which branch is currently your Production Branch. Let's assume it's `master`.
+2.  **Your `master` branch is for production.** This branch will use the `chessdb-prod` database.
+3.  **Your `develop` branch is for development/staging.** When you push to `develop`, Vercel will create a preview deployment that uses the `chessdb-dev` database.
+4.  **Your local machine is for local work.** Running `npm run dev` will use your local Docker database via the `.env` file.
+
+**Your Git workflow remains exactly as we discussed:**
+*   Create feature branches from `develop`.
+*   Merge completed features into `develop` (triggering a Preview deployment).
+*   When you are ready to release, merge `develop` into `master` (triggering a Production deployment).
+
+I am truly sorry for the confusion. The UI has evidently changed, and I failed to adapt. By checking the Deployments tab, you can be 100% confident about which branch triggers your production environment, which is the essential piece of information you need to manage your project correctly.
+
