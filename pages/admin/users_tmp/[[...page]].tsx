@@ -12,6 +12,9 @@ type ManageUsersPageProps = {
     users: SerializableUser[];
     totalPages: number;
     currentPage: number;
+    onAdd: () => void;
+    onEdit: (user: SerializableUser) => void;
+    onDeleteSuccess: () => void;
 };
 
 const ManageUsersPage = ({ users, totalPages, currentPage }: ManageUsersPageProps) => {
@@ -35,6 +38,9 @@ const ManageUsersPage = ({ users, totalPages, currentPage }: ManageUsersPageProp
                 users={users} 
                 totalPages={totalPages}
                 currentPage={currentPage}
+                onAdd={() => ({})}
+                onEdit={handleUserEdit}
+                onDeleteSuccess={handleSave}
             />
         </AdminLayout>
     );
