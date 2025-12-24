@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import ReactHeaderComponent from 'apps/web/components/ReactHeaderComponent';
-import ReactFooterComponent from 'apps/web/components/ReactFooterComponent';
+import ReactHeaderComponent from '@/components/ReactHeaderComponent';
+import ReactFooterComponent from '@/components/ReactFooterComponent';
 
 const BannedPage = () => {
     const router = useRouter();

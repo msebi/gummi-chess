@@ -1,10 +1,10 @@
 import type { InferGetStaticPropsType, GetStaticProps } from 'next';
-import ReactHeaderComponent from 'apps/web/components/ReactHeaderComponent';
-import ReactSiteDescriptionComponent from 'apps/web/components/ReactSiteDescriptionComponent';
-import ReactCourseContainerComponent from 'apps/web/components/ReactCourseContainerComponent';
-import ReactPreFooterComponent from 'apps/web/components/ReactPreFooterComponent';
-import ReactFooterComponent from 'apps/web/components/ReactFooterComponent';
-import FadeInOnScroll from 'apps/web/components/FadeInOnScroll';
+import ReactHeaderComponent from '@/components/ReactHeaderComponent';
+import ReactSiteDescriptionComponent from '@/components/ReactSiteDescriptionComponent';
+import ReactCourseContainerComponent from '@/components/ReactCourseContainerComponent';
+import ReactPreFooterComponent from '@/components/ReactPreFooterComponent';
+import ReactFooterComponent from '@/components/ReactFooterComponent';
+import FadeInOnScroll from '@/components/FadeInOnScroll';
 
 import prisma from 'database';
 import { Course as CourseType, KeyPosition  } from '../../../generated/prisma/client';

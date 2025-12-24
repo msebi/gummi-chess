@@ -1,6 +1,6 @@
 import '@/styles/globals.css'; // This is the line that imports Tailwind
 import type { AppProps } from 'next/app';
-import Layout from 'apps/web/components/Layout'; // Adjust the path as necessary
+import Layout from '@/components/Layout'; // Adjust the path as necessary
 import { SessionProvider } from 'next-auth/react'; // Import the provider
 // TODO: change font as needed
 import { Roboto } from 'next/font/google';

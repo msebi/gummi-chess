@@ -1,6 +1,6 @@
-import ReactHeaderComponent from 'apps/web/components/ReactHeaderComponent';
-import ReactFooterComponent from 'apps/web/components/ReactFooterComponent';
-import SignInFormComponent from 'apps/web/components/signin/SignInFormComponent';
+import ReactHeaderComponent from '@/components/ReactHeaderComponent';
+import ReactFooterComponent from '@/components/ReactFooterComponent';
+import SignInFormComponent from '@/components/signin/SignInFormComponent';
 
 const LoginPage = () => {
   return (

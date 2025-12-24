@@ -8,8 +8,9 @@
   ],
   "scripts": {
     "dev": "npm run dev --workspace=web",
-    "build": "npm run build --workspace=web",
+    "build": "npm run build --debug --workspace=web",
     "start": "npm run start --workspace=web",
+    "type-check": "tsc --noEmit --traceResolution",
     "lint": "npm run lint --workspace=web",
     "dev:socket": "npm run dev --workspace=socket-server",
     "db:generate": "npm run generate --workspace=database",

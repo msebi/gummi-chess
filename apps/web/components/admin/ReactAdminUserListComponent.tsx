@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { SerializableUser } from 'apps/web/types/index';
+import { SerializableUser } from '@/types/index';
 import ServerPagination from '../ui/ServerPagination';
 
 type Props = {

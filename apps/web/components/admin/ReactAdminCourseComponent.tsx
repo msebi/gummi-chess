@@ -1,5 +1,5 @@
-import ReactCourseComponent from 'apps/web/components/ReactCourseComponent';
-import { type SerializableCourse } from 'apps/web/pages/index';
+import ReactCourseComponent from '@/components/ReactCourseComponent';
+import { type SerializableCourse } from '@/pages/index';
 
 type Props = {
     course: SerializableCourse;

@@ -1,8 +1,8 @@
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from 'next';
 import prisma from 'database';
-import ReactHeaderComponent from 'apps/web/components/ReactHeaderComponent';
-import ReactViewCourseComponent from 'apps/web/components/ReactViewCourseComponent';
-import ReactFooterComponent from 'apps/web/components/ReactFooterComponent';
+import ReactHeaderComponent from '@/components/ReactHeaderComponent';
+import ReactViewCourseComponent from '@/components/ReactViewCourseComponent';
+import ReactFooterComponent from '@/components/ReactFooterComponent';
 // import { SerializableCourse } from '@/pages/index';
 import { Course as CourseType, KeyPosition } from '../../../../generated/prisma/client';
 

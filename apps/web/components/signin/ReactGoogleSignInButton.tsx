@@ -1,6 +1,6 @@
 import { signIn } from 'next-auth/react';
-import { Button } from 'apps/web/components/ui/button';
-import GoogleIcon from 'apps/web/components/icons/GoogleIcon';
+import { Button } from '@/components/ui/button';
+import GoogleIcon from '@/components/icons/GoogleIcon';
 
 const GoogleSignInButton = () => {
     // Update Google sign-in to handle potential redirects with errors

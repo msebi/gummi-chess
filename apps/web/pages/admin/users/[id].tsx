@@ -4,9 +4,9 @@ import { authOptions } from '../../api/auth/[...nextauth]';
 import prisma from 'database';
 import { useRouter } from 'next/router';
 
-import ReactHeaderComponent from 'apps/web/components/ReactHeaderComponent';
-import ReactFooterComponent from 'apps/web/components/ReactFooterComponent';
-import ReactCourseComponent from 'apps/web/components/ReactCourseComponent';
+import ReactHeaderComponent from '@/components/ReactHeaderComponent';
+import ReactFooterComponent from '@/components/ReactFooterComponent';
+import ReactCourseComponent from '@/components/ReactCourseComponent';
 
 
 // Define a type for the serialized course, including its relations

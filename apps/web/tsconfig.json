@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
+    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
@@ -13,26 +14,26 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "plugins": [{ "name": "next" }],
+    // This is the key. The base URL is the root of the web app.
     "baseUrl": ".",
+    // Paths are relative to the baseUrl (i.e., relative to apps/web)
     "paths": {
-      "@/components/*": ["apps/web/components/*"],
-      "@/lib/*": ["apps/web/lib/*"],
-      "@/pages/*": ["apps/web/pages/*"],
+      "@/components/*": ["components/*"],
+      "@/lib/*": ["lib/*"],
+      "@/pages/*": ["pages/*"],
       "@/styles/*": ["styles/*"],
-      "@/types/*": ["apps/web/types/*"],
-      "@/generated/prisma/client": ["generated/prisma/client"]
+      "@/types/*": ["types/*"],
+      "@/hooks/*": ["hooks/*"],
+      // This is how you reference another workspace
+      "database": ["../../packages/database"]
     }
   },
-  "include": ["apps/web/next-env.d.ts", 
-              "**/*.ts", 
-              "**/*.tsx", 
-              ".next/types/**/*.ts",
-              "apps/web/types/**/*.d.ts"
-, "prisma.config.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
   "exclude": ["node_modules"]
 }

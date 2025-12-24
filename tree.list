@@ -2,6 +2,8 @@
 ├── README.md
 ├── apps
 │   ├── socket-server
+│   │   ├── package.json
+│   │   └── tsconfig.json
 │   └── web
 │       ├── components
 │       │   ├── FadeInOnScroll.tsx
@@ -128,52 +130,55 @@
 ├── package.json
 ├── packages
 │   └── database
-│       ├── generated
-│       │   └── prisma
-│       │       ├── client.d.ts
-│       │       ├── client.js
-│       │       ├── default.d.ts
-│       │       ├── default.js
-│       │       ├── edge.d.ts
-│       │       ├── edge.js
-│       │       ├── index-browser.js
-│       │       ├── index.d.ts
-│       │       ├── index.js
-│       │       ├── libquery_engine-debian-openssl-3.0.x.so.node
-│       │       ├── package.json
-│       │       ├── query-engine-debian-openssl-3.0.x
-│       │       ├── query_engine_bg.js
-│       │       ├── query_engine_bg.wasm
-│       │       ├── runtime
-│       │       │   ├── binary.d.ts
-│       │       │   ├── binary.js
-│       │       │   ├── edge-esm.js
-│       │       │   ├── edge.js
-│       │       │   ├── index-browser.d.ts
-│       │       │   ├── index-browser.js
-│       │       │   ├── library.d.ts
-│       │       │   ├── library.js
-│       │       │   ├── react-native.js
-│       │       │   ├── wasm-compiler-edge.js
-│       │       │   └── wasm-engine-edge.js
-│       │       ├── schema.prisma
-│       │       ├── wasm-edge-light-loader.mjs
-│       │       ├── wasm-worker-loader.mjs
-│       │       ├── wasm.d.ts
-│       │       └── wasm.js
-│       ├── index.tsx
+│       ├── index.ts
 │       ├── package.json
-│       └── prisma
-│           ├── migrations
-│           │   ├── 20251220192704_init
-│           │   │   └── migration.sql
-│           │   └── migration_lock.toml
-│           ├── schema.prisma
-│           └── seed.ts
+│       ├── prisma
+│       │   ├── generated
+│       │   │   └── prisma
+│       │   │       ├── client.d.ts
+│       │   │       ├── client.js
+│       │   │       ├── default.d.ts
+│       │   │       ├── default.js
+│       │   │       ├── edge.d.ts
+│       │   │       ├── edge.js
+│       │   │       ├── index-browser.js
+│       │   │       ├── index.d.ts
+│       │   │       ├── index.js
+│       │   │       ├── libquery_engine-debian-openssl-3.0.x.so.node
+│       │   │       ├── package.json
+│       │   │       ├── query-engine-debian-openssl-3.0.x
+│       │   │       ├── query_engine_bg.js
+│       │   │       ├── query_engine_bg.wasm
+│       │   │       ├── runtime
+│       │   │       │   ├── binary.d.ts
+│       │   │       │   ├── binary.js
+│       │   │       │   ├── edge-esm.js
+│       │   │       │   ├── edge.js
+│       │   │       │   ├── index-browser.d.ts
+│       │   │       │   ├── index-browser.js
+│       │   │       │   ├── library.d.ts
+│       │   │       │   ├── library.js
+│       │   │       │   ├── react-native.js
+│       │   │       │   ├── wasm-compiler-edge.js
+│       │   │       │   └── wasm-engine-edge.js
+│       │   │       ├── schema.prisma
+│       │   │       ├── wasm-edge-light-loader.mjs
+│       │   │       ├── wasm-worker-loader.mjs
+│       │   │       ├── wasm.d.ts
+│       │   │       └── wasm.js
+│       │   ├── migrations
+│       │   │   ├── 20251220192704_init
+│       │   │   │   └── migration.sql
+│       │   │   └── migration_lock.toml
+│       │   ├── schema.prisma
+│       │   └── seed.ts
+│       └── tsconfig.json
 ├── prisma-notes.md
 ├── seed-remote-prod.md
 ├── tree.list
+├── tsconfig.base.json
+├── tsconfig.json
 ├── vercel-notes.md
 └── vite.config.ts
 
-39 directories, 138 files
+39 directories, 143 files

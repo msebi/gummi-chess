@@ -1,5 +1,5 @@
 import { ReactAdminCourseComponent } from "./ReactAdminCourseComponent";
-import { type SerializableCourse } from "apps/web/pages/index";
+import { type SerializableCourse } from "@/pages/index";
 import ServerPagination from "../ui/ServerPagination";
 
 type Props = {

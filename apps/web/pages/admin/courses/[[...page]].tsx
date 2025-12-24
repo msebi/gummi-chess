@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
-import { authOptions } from 'apps/web/pages/api/auth/[...nextauth]';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import prisma from 'database';
-import AdminLayout from 'apps/web/components/admin/ReactAdminLayout';
-import { ReactAdminCourseComponentGridContainer } from 'apps/web/components/admin/ReactAdminCourseComponentGridContainer';
-import { ReactAdminCreateCourseComponent } from 'apps/web/components/admin/ReactAdminCreateCourseComponent';
-import { SerializableCourse } from 'apps/web/types/index';
+import AdminLayout from '@/components/admin/ReactAdminLayout';
+import { ReactAdminCourseComponentGridContainer } from '@/components/admin/ReactAdminCourseComponentGridContainer';
+import { ReactAdminCreateCourseComponent } from '@/components/admin/ReactAdminCreateCourseComponent';
+import { SerializableCourse } from '@/types/index';
 
 type ManageCoursesProps = {
     courses: SerializableCourse[];

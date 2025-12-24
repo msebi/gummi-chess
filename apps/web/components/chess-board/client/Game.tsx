@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
-import { CustomDialog } from "apps/web/components/chess-board/client/components/CustomDialog";
+import { CustomDialog } from "@/components/chess-board/client/components/CustomDialog";
 
 function Game({ players, room, orientation, cleanup}) {
     const chess = useMemo(() => new Chess(), []); 

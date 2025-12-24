@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { ReactAdminCourseComponent } from './ReactAdminCourseComponent';
-import { type SerializableCourse } from 'apps/web/pages/index';
+import { type SerializableCourse } from '@/pages/index';
 
 type Props = {
     courses: SerializableCourse[];

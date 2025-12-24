@@ -1,11 +1,11 @@
 // pages/admin/users/index.tsx
 import { GetServerSideProps } from 'next';
 import { getServerSession } from 'next-auth';
-import { authOptions } from 'apps/web/pages/api/auth/[...nextauth]';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import prisma from 'database';
-import AdminLayout from 'apps/web/components/admin/ReactAdminLayout';
-import { ReactAdminUserListComponent } from 'apps/web/components/admin/ReactAdminUserListComponent';
-import { SerializableUser } from 'apps/web/types/index';
+import AdminLayout from '@/components/admin/ReactAdminLayout';
+import { ReactAdminUserListComponent } from '@/components/admin/ReactAdminUserListComponent';
+import { SerializableUser } from '@/types/index';
 import { useRouter } from 'next/router'; 
 
 type ManageUsersPageProps = {

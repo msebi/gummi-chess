@@ -1,11 +1,11 @@
 import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import { getServerSession } from 'next-auth';
-import { authOptions } from 'apps/web/pages/api/auth/[...nextauth]';
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import prisma from 'database';
-import AdminLayout from 'apps/web/components/admin/ReactAdminLayout';
-import { ReactAdminUserListComponent } from 'apps/web/components/admin/ReactAdminUserListComponent';
-import { SerializableCourse, SerializableUser } from 'apps/web/types/index';
+import AdminLayout from '@/components/admin/ReactAdminLayout';
+import { ReactAdminUserListComponent } from '@/components/admin/ReactAdminUserListComponent';
+import { SerializableCourse, SerializableUser } from '@/types/index';
 
 
 type ManageUsersPageProps = {
