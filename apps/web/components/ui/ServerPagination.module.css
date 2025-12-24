@@ -1,0 +1,137 @@
+/* ===== Base Wrapper ===== */
+.serverPagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.serverPagination .paginationUL {
+  display: flex;
+  flex-wrap: nowrap; /* Always keep in one line unless mobile */
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.serverPagination .paginationUL .pageItem {
+  list-style: none;
+  display: inline-flex;
+}
+
+/* ===== Base Button Style ===== */
+.serverPagination .paginationUL .pageItem .pageButton {
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  gap: 5px;
+  background-color: #ddd;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.serverPagination .paginationUL .pageItem .pageButton:hover {
+  color: #f1f2f6;
+  background-color: #fd7238;
+}
+
+.serverPagination .paginationUL .pageItem .activeButton {
+  color: #f1f2f6;
+  background-color: #fd7238;
+}
+
+.serverPagination .paginationUL .pageItem .pageButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== Common Reset for All Buttons ===== */
+.commonButtonStyle {
+  outline: none;
+  border: none;
+  background-color: transparent;
+}
+
+/* ===== Style 1: Circular Green ===== */
+.style-1 .paginationUL {
+  flex-wrap: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  list-style: none;
+}
+
+.style-1 .paginationUL .pageItem .pageButton {
+  background-color: transparent;
+  border-radius: 50%;
+  height: 45px;
+  width: 45px;
+  border: none;
+  outline: none;
+}
+
+.style-1 .paginationUL .pageItem .pageButton:hover,
+.style-1 .paginationUL .pageItem .activeButton {
+  background-color: #f7c53e;
+  color: #f1f2f6;
+}
+
+/* ===== Style 2: Square Blue Borders ===== */
+.style-2 .paginationUL {
+  flex-wrap: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  list-style: none;
+}
+
+.style-2 .paginationUL .pageItem .pageButton {
+  font-size: 14px;
+  background: #fff;
+  border: 1px solid #ddd;
+  color: #4285f4;
+  height: 40px;
+  width: 40px;
+  margin-top: 5px;
+  border-radius: 0;
+}
+
+.style-2 .paginationUL .pageItem .pageButton:hover {
+  background-color: #eee;
+  color: #4285f4;
+}
+
+.style-2 .paginationUL .pageItem .activeButton {
+  background-color: #4285f4;
+  color: #eee;
+}
+
+.style-2 .paginationUL .pageItem .leftNavigation {
+  border-radius: 6px 0 0 6px;
+}
+
+.style-2 .paginationUL .pageItem .rightNavigation {
+  border-radius: 0 6px 6px 0;
+}
+
+/* ===== Mobile Responsiveness ===== */
+@media only screen and (max-width: 576px) {
+  .serverPagination .paginationUL {
+    flex-wrap: wrap;
+  }
+
+  .serverPagination .paginationUL .pageItem .pageButton {
+    width: 25px;
+    height: 25px;
+    margin: 3px;
+    font-size: 12px;
+  }
+}

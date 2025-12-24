@@ -1,0 +1,179 @@
+.
+├── README.md
+├── apps
+│   ├── socket-server
+│   └── web
+│       ├── components
+│       │   ├── FadeInOnScroll.tsx
+│       │   ├── Layout.tsx
+│       │   ├── Profile.tsx
+│       │   ├── ReactChessBoardComponent.tsx
+│       │   ├── ReactCourseComponent.tsx
+│       │   ├── ReactCourseContainerComponent.tsx
+│       │   ├── ReactDescriptionComponent.tsx
+│       │   ├── ReactFooterComponent.tsx
+│       │   ├── ReactHeaderComponent.tsx
+│       │   ├── ReactMenuAndSocialsComponent.tsx
+│       │   ├── ReactMenuComponent.tsx
+│       │   ├── ReactPreFooterComponent.tsx
+│       │   ├── ReactProfileDropdown.tsx
+│       │   ├── ReactSiteDescriptionComponent.tsx
+│       │   ├── ReactSocialEntryComponent.tsx
+│       │   ├── ReactSocialsComponent.tsx
+│       │   ├── ReactVideoComponent.tsx
+│       │   ├── ReactViewCourseComponent.tsx
+│       │   ├── admin
+│       │   │   ├── ReactAdminCourseComponent.tsx
+│       │   │   ├── ReactAdminCourseComponentContainer.tsx
+│       │   │   ├── ReactAdminCourseComponentGridContainer.tsx
+│       │   │   ├── ReactAdminCreateCourseComponent.tsx
+│       │   │   ├── ReactAdminLayout.tsx
+│       │   │   └── ReactAdminUserListComponent.tsx
+│       │   ├── chess-board
+│       │   │   ├── client
+│       │   │   │   ├── Game.tsx
+│       │   │   │   ├── MutliplayerBoard.tsx
+│       │   │   │   └── components
+│       │   │   │       └── CustomDialog.tsx
+│       │   │   └── server
+│       │   ├── icons
+│       │   │   ├── GoogleIcon.tsx
+│       │   │   ├── ReactLogoComponent.tsx
+│       │   │   └── SocialIcon.tsx
+│       │   ├── signin
+│       │   │   ├── ReactGoogleSignInButton.tsx
+│       │   │   └── SignInFormComponent.tsx
+│       │   └── ui
+│       │       ├── ActionTooltip.tsx
+│       │       ├── ServerPagination.module.css
+│       │       ├── ServerPagination.tsx
+│       │       ├── TestToggleSwitch.tsx
+│       │       ├── ToggleSwitch.tsx
+│       │       ├── TooltipIcon.tsx
+│       │       ├── button.tsx
+│       │       └── ui-controllers
+│       │           ├── ControlButton.tsx
+│       │           ├── Dpad.tsx
+│       │           └── LinePad.tsx
+│       ├── components.json
+│       ├── lib
+│       │   ├── prisma.ts
+│       │   └── utils.ts
+│       ├── next-env.d.ts
+│       ├── next.config.ts
+│       ├── package.json
+│       ├── pages
+│       │   ├── _app.tsx
+│       │   ├── admin
+│       │   │   ├── courses
+│       │   │   │   └── [[...page]].tsx
+│       │   │   ├── index.tsx
+│       │   │   ├── users
+│       │   │   │   ├── [id].tsx
+│       │   │   │   └── index.tsx
+│       │   │   └── users_tmp
+│       │   │       └── [[...page]].tsx
+│       │   ├── api
+│       │   │   ├── admin
+│       │   │   │   └── users
+│       │   │   │       └── [id].tsx
+│       │   │   ├── auth
+│       │   │   │   └── [...nextauth].ts
+│       │   │   └── courses
+│       │   │       ├── [id].tsx
+│       │   │       └── index.tsx
+│       │   ├── banned.tsx
+│       │   ├── courses
+│       │   │   └── [id].tsx
+│       │   ├── courses.tsx
+│       │   ├── dashboard.tsx
+│       │   ├── index.tsx
+│       │   ├── login.tsx
+│       │   └── profile.tsx
+│       ├── postcss.config.js
+│       ├── public
+│       │   ├── default-avatar.png
+│       │   ├── file.svg
+│       │   ├── globe.svg
+│       │   ├── next.svg
+│       │   ├── stockfish.wasm
+│       │   ├── stockfish.wasm.js
+│       │   ├── vercel.svg
+│       │   └── window.svg
+│       ├── styles
+│       │   └── globals.css
+│       ├── tailwind.config.js
+│       ├── tsconfig.json
+│       └── types
+│           ├── index.ts
+│           ├── next-auth.d.ts
+│           ├── stockfish.d.ts
+│           └── sweetpagination.d.ts
+├── docker-compose.yml
+├── downgrade-package.md
+├── eslint.config.mjs
+├── images
+│   └── chess_pieces
+│       ├── bishop_black.svg
+│       ├── bishop_white.svg
+│       ├── king_white.svg
+│       ├── knight_white.svg
+│       ├── pawn_black.svg
+│       ├── queen_black.svg
+│       ├── queen_white.svg
+│       ├── rook_black.svg
+│       └── rook_white.svg
+├── nextjs-notes.md
+├── package-lock.json
+├── package.json
+├── packages
+│   └── database
+│       ├── generated
+│       │   └── prisma
+│       │       ├── client.d.ts
+│       │       ├── client.js
+│       │       ├── default.d.ts
+│       │       ├── default.js
+│       │       ├── edge.d.ts
+│       │       ├── edge.js
+│       │       ├── index-browser.js
+│       │       ├── index.d.ts
+│       │       ├── index.js
+│       │       ├── libquery_engine-debian-openssl-3.0.x.so.node
+│       │       ├── package.json
+│       │       ├── query-engine-debian-openssl-3.0.x
+│       │       ├── query_engine_bg.js
+│       │       ├── query_engine_bg.wasm
+│       │       ├── runtime
+│       │       │   ├── binary.d.ts
+│       │       │   ├── binary.js
+│       │       │   ├── edge-esm.js
+│       │       │   ├── edge.js
+│       │       │   ├── index-browser.d.ts
+│       │       │   ├── index-browser.js
+│       │       │   ├── library.d.ts
+│       │       │   ├── library.js
+│       │       │   ├── react-native.js
+│       │       │   ├── wasm-compiler-edge.js
+│       │       │   └── wasm-engine-edge.js
+│       │       ├── schema.prisma
+│       │       ├── wasm-edge-light-loader.mjs
+│       │       ├── wasm-worker-loader.mjs
+│       │       ├── wasm.d.ts
+│       │       └── wasm.js
+│       ├── index.tsx
+│       ├── package.json
+│       └── prisma
+│           ├── migrations
+│           │   ├── 20251220192704_init
+│           │   │   └── migration.sql
+│           │   └── migration_lock.toml
+│           ├── schema.prisma
+│           └── seed.ts
+├── prisma-notes.md
+├── seed-remote-prod.md
+├── tree.list
+├── vercel-notes.md
+└── vite.config.ts
+
+39 directories, 138 files
