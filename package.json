@@ -18,9 +18,18 @@
     "db:seed": "npm run seed --workspace=database",
     "db:reset": "npm run db:push -- --force-reset && npm run db:seed"
   },
+  "overrides": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0"
+  },
   "devDependencies": {
     "prisma": "6.16.2",
     "ts-node": "^10.9.2",
     "typescript": "^5"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "^1.2.4",
+    "class-variance-authority": "^0.7.1",
+    "flowbite-react": "^0.12.14"
   }
 }

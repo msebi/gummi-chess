@@ -1,9 +1,47 @@
+// ./tsconfig.json
 {
-  "files": [],
-  "include": [],
-  "references": [
-    { "path": "./apps/web" },
-    { "path": "./apps/socket-server" },
-    { "path": "./packages/database" }
-  ]
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    // The single source of truth for all path aliases
+    "baseUrl": ".",
+    "paths": {
+      // This tells TS that the 'database' package can be found in this folder.
+      // It will then look at that package's package.json to find the entry file.
+      "database": ["packages/database/index.ts"], 
+      
+      // These are for your Next.js app
+      "@/components/*": ["apps/web/components/*"],
+      "@/lib/*": ["apps/web/lib/*"],
+      "@/pages/*": ["apps/web/pages/*"],
+      "@/styles/*": ["apps/web/styles/*"],
+      "@/types/*": ["apps/web/types/*"],
+      "@/hooks/*": ["apps/web/hooks/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "types/**/*.d.ts" // Ensure custom declarations are included
+  ],
+  "exclude": ["node_modules"]
 }

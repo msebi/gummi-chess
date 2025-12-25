@@ -1,4 +1,4 @@
-import { PrismaClient } from '../../../generated/prisma/client'; // <-- YOUR CORRECTED IMPORT PATH
+import { PrismaClient } from 'database/prisma/generated/prisma/client'; // <-- YOUR CORRECTED IMPORT PATH
 
 // This helps us avoid creating too many Prisma Client instances in development.
 declare global {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import YouTube from 'react-youtube';
-import { KeyPosition } from '../../../generated/prisma/client';
+import { KeyPosition } from 'database/prisma/generated/prisma/client';
 import ActionTooltip from './ui/ActionTooltip';
 
 type ReactVideoComponentProps = {

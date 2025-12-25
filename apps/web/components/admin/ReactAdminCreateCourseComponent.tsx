@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { type SerializableCourse } from '@/pages/index';
+import { SerializableCourse } from '@/types/index';
 
 type Props = {
     initialData?: SerializableCourse | null;

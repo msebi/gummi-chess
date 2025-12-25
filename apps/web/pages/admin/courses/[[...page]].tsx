@@ -6,7 +6,7 @@ import prisma from 'database';
 import AdminLayout from '@/components/admin/ReactAdminLayout';
 import { ReactAdminCourseComponentGridContainer } from '@/components/admin/ReactAdminCourseComponentGridContainer';
 import { ReactAdminCreateCourseComponent } from '@/components/admin/ReactAdminCreateCourseComponent';
-import { SerializableCourse } from '@/types/index';
+import { SerializableCourse, CourseWithRelations } from '@/types/index';
 
 type ManageCoursesProps = {
     courses: SerializableCourse[];
@@ -36,7 +36,7 @@ const ManageCoursesPage = ({ courses, totalPages, currentPage }: ManageCoursesPr
                     totalPages={totalPages}
                     currentPage={currentPage}
                     onAdd={() => setIsCreating(true)}
-                    onEdit={setCourseToEdit}
+                    onEdit={(course) => setCourseToEdit(course)}
                     onDeleteSuccess={handleSaveOrCancel}
                 />
             )}
@@ -55,7 +55,7 @@ export const getServerSideProps: GetServerSideProps<ManageCoursesProps> = async 
     const page = pageQuery ? parseInt(pageQuery[0], 10) : 1;
     const pageSize = 10;
 
-    const courses = await prisma.course.findMany({
+    const courses: CourseWithRelations[] = await prisma.course.findMany({
                         skip: (page - 1) * pageSize,
                         take: pageSize,
                         orderBy: { createdAt: 'desc' },

@@ -1,4 +1,4 @@
-import { User as UserType, Course as CourseType, KeyPosition, Tag } from '@/../../packages/database/prisma/generated/prisma/client';
+import { User as UserType, Course as CourseType, KeyPosition, Tag } from 'database/prisma/generated/prisma/client';
 
 // This is the full shape of a Course with its relations, as fetched from Prisma
 export type CourseWithRelations = CourseType & {

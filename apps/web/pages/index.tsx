@@ -7,28 +7,13 @@ import ReactFooterComponent from '@/components/ReactFooterComponent';
 import FadeInOnScroll from '@/components/FadeInOnScroll';
 
 import prisma from 'database';
-import { Course as CourseType, KeyPosition  } from '../../../generated/prisma/client';
 
-// Define the shape of the data passed to the component
-// Including tags  
-export type CourseWithRelations = CourseType & {
-  tags: { tag: { id: string; name: string} }[];
-  keyPositions: KeyPosition[];
-};
-
-// Create JSON-safe version of serializable data
-// Omit the types that are not serializable and add them back 
-// as primitives. 
-export type SerializableCourse = Omit<CourseWithRelations, 'price' | 'createdAt' | 'updatedAt'> & {
-  price: number;
-  createdAt: string, 
-  updatedAt: string 
-};
+import { SerializableCourse, CourseWithRelations } from '@/types/index';
 
 // This function runs on the server at build time 
 export const getStaticProps: GetStaticProps<{ courses: SerializableCourse[] }> = async () => {
   console.log("Getting courses from database...");
-  const freeCourses = await prisma.course.findMany({
+  const freeCourses : CourseWithRelations[] = await prisma.course.findMany({
     where: {
       isFree: true,
     },
