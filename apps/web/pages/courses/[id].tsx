@@ -3,8 +3,9 @@ import prisma from 'database';
 import ReactHeaderComponent from '@/components/ReactHeaderComponent';
 import ReactViewCourseComponent from '@/components/ReactViewCourseComponent';
 import ReactFooterComponent from '@/components/ReactFooterComponent';
-// import { SerializableCourse } from '@/pages/index';
-import { Course as CourseType, KeyPosition } from '../../../../generated/prisma/client';
+
+
+import { Course as CourseType, KeyPosition, Rating as RatingType } from 'database/prisma/generated/prisma/client';
 
 // TODO: verify/adjust
 export type CourseWithRelations = CourseType & {
@@ -16,11 +17,12 @@ export type SerializableCourse = Omit<CourseWithRelations, 'price' | 'createdAt'
     price: number;
     createdAt: string;
     updatedAt: string;
+    ratings: RatingType[]
 };
 
 // Step 1: Tell next.js which course pages to pre-render at build time
 export const getStaticPaths: GetStaticPaths = async () => {
-    const courses = await prisma.course.findMany({
+    const courses : SerializableCourse[] = await prisma.course.findMany({
         select: { id: true }, // Only fetch the IDs
     });
 

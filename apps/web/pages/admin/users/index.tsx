@@ -5,8 +5,9 @@ import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import prisma from 'database';
 import AdminLayout from '@/components/admin/ReactAdminLayout';
 import { ReactAdminUserListComponent } from '@/components/admin/ReactAdminUserListComponent';
-import { SerializableUser } from '@/types/index';
 import { useRouter } from 'next/router'; 
+import { SerializableUser } from '@/types/index';
+import { User as UserType } from 'database/prisma/generated/prisma/client'; // Import the raw Prisma type
 
 type ManageUsersPageProps = {
   users: SerializableUser[];
@@ -37,7 +38,7 @@ export const getServerSideProps: GetServerSideProps<ManageUsersPageProps> = asyn
     const page = context.query.page ? parseInt(context.query.page as string, 10) : 1;
     const pageSize = 10;
     
-    const users = await prisma.user.findMany({
+    const users : UserType[] = await prisma.user.findMany({
         skip: (page - 1) * pageSize,
         take: pageSize,
         orderBy: { name: 'asc' }

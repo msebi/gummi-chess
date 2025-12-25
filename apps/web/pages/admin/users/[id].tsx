@@ -2,44 +2,38 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../api/auth/[...nextauth]';
 import prisma from 'database';
+import { UserWithRelations } from '@/types/index';
 import { useRouter } from 'next/router';
+
+import { 
+  User as PrismaUser, 
+  Course as PrismaCourse, 
+  UserCourses,
+} from 'database/prisma/generated/prisma/client';
+
+import { type SerializableAdminCourse } from '@/types/index'; 
 
 import ReactHeaderComponent from '@/components/ReactHeaderComponent';
 import ReactFooterComponent from '@/components/ReactFooterComponent';
 import ReactCourseComponent from '@/components/ReactCourseComponent';
 
+// Import our centralized, JSON-safe type for the props
+import { type UserWithTotalSpendings } from '@/types/index';
 
-// Define a type for the serialized course, including its relations
-type SerializedCourseInUser = {
-    id: string;
-    title: string;
-    thumbnailUrl: string;
-    // Add other types as needed  
-    tags: {
-        tag: {
-            name: string;
-        }
-    }[];
+// This is the JSON-safe version of the detailed user page props
+type UserDetailsProps = Omit<UserWithRelations, 'emailVerified' | 'lastSeen' | 'createdAt' | 'courses'> & {
+  emailVerified: string | null;
+  lastSeen: string | null;
+  createdAt: string;
+  totalSpent: number;
+  courses: (Omit<UserCourses, 'enrolledAt' | 'priceAtEnrollment' | 'course'> & {
+    enrolledAt: string;
+    priceAtEnrollment: number;
+    course: SerializableAdminCourse; // <-- Use the new, more detailed type
+  })[];
 };
 
-// Define main type for the props passed to the page component
-// This is the final JSON-safe data structure 
-type UserDetailsProps = {
-    id: string;
-    name: string | null;
-    email: string | null;
-    emailVerified: string | null; // Dates converted to strings
-    lastSeen: string | null; // Dates converted to strings
-    createdAt: string; // Dates converted to strings
-    isBanned: boolean;
-    isAdmin: boolean;
-    totalSpent: number;
-    courses: {
-        enrolledAt: string;  // Dates converted to strings 
-        course: SerializedCourseInUser
-    }[]
-};
-
+// This function fetches the raw, unserialized data from the database.
 const fetchUserDetails = async (id: string) => {
     const user = await prisma.user.findUnique({
         where: { id },
@@ -48,7 +42,9 @@ const fetchUserDetails = async (id: string) => {
                 include: {
                     course: {
                         include: {
-                            tags: { include: { tag: true } }
+                            tags: { include: { tag: true } },
+                            keyPositions: true, // Make sure all relations are included
+                            ratings: true,
                         }
                     }
                 }
@@ -71,6 +67,53 @@ const fetchUserDetails = async (id: string) => {
         ...user,
         totalSpent: totalSpentAggregate._sum.priceAtEnrollment?.toNumber() ?? 0
     };
+};
+
+export const getServerSideProps: GetServerSideProps<{ userDetails: UserDetailsProps | null }> = async (context) => {
+    const session = await getServerSession(context.req, context.res, authOptions);
+    if (!session || !session.user?.isAdmin) {
+        return {
+            redirect: {
+                destination: '/api/auth/signin', permanent: false
+            }
+        };
+    }
+
+    const { id } = context.params!;
+    const userDetailsFromDb : UserWithTotalSpendings  = await fetchUserDetails(String(id));
+
+    if (!userDetailsFromDb) {
+        return {
+            notFound: true,
+        };
+    }
+
+    // Serialize all the dates before passing 
+    const serializableUserDetails: UserDetailsProps = {
+        ...userDetailsFromDb,
+        createdAt: userDetailsFromDb.createdAt.toISOString(),
+        emailVerified: userDetailsFromDb.emailVerified?.toISOString() || null,
+        lastSeen: userDetailsFromDb.lastSeen?.toISOString() || null,
+        totalSpent: userDetailsFromDb.totalSpent,
+        courses: userDetailsFromDb.courses.map(uc => ({
+            userId: uc.userId,
+            courseId: uc.courseId,
+            enrolledAt: uc.enrolledAt.toISOString(),
+            priceAtEnrollment: uc.priceAtEnrollment.toNumber(),
+            course: { // This block now correctly creates a SerializableAdminCourse
+                ...uc.course,
+                price: uc.course.price.toNumber(),
+                createdAt: uc.course.createdAt.toISOString(),
+                updatedAt: uc.course.updatedAt.toISOString(),
+                tags: uc.course.tags, // This is now correct
+                ratings: uc.course.ratings.map(r => ({ ...r, createdAt: r.createdAt.toISOString() })),
+                keyPositions: uc.course.keyPositions,
+            }
+        }))
+    };
+
+    // ...but now the return type matches our explicit definition.
+    return { props: { userDetails: serializableUserDetails } };
 };
 
 const UserAdminPage = ({ userDetails }: { userDetails: UserDetailsProps | null}) => {
@@ -178,48 +221,4 @@ const UserAdminPage = ({ userDetails }: { userDetails: UserDetailsProps | null})
     );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    const session = await getServerSession(context.req, context.res, authOptions);
-    if (!session || !session.user?.isAdmin) {
-        return {
-            redirect: {
-                destination: '/api/auth/signin', permanent: false
-            }
-        };
-    }
-
-    const { id } = context.params!;
-    const userDetails = await fetchUserDetails(String(id));
-
-    if (!userDetails) {
-        return {
-            notFound: true,
-        };
-    }
-
-    // Serialize all the dates before passing 
-    const serializableUserDetails = {
-        ...userDetails,
-        createdAt: userDetails.createdAt.toISOString(),
-        emailVerified: userDetails.emailVerified?.toISOString() || null,
-        lastSeen: userDetails.lastSeen?.toISOString() || null,
-        courses: userDetails.courses.map(uc => ({
-            ...uc,
-            enrolledAt: uc.enrolledAt.toISOString(),
-            course: {
-                ...uc.course,
-                price: uc.course.price.toNumber(),
-                createdAt: uc.course.createdAt.toISOString(),
-                updatedAt: uc.course.updatedAt.toISOString(),
-                // Make sure the tags are serialized correctly if they contain non-serializable data
-                tags: uc.course.tags.map(t => ({ tag: { id: t.tag.id, name: t.tag.name } })),
-            }
-        }))
-    };
-
-    // ...but now the return type matches our explicit definition.
-    return { props: { userDetails: serializableUserDetails } };
-};
-
 export default UserAdminPage;
-

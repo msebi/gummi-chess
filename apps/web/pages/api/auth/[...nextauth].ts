@@ -9,8 +9,6 @@ import { Session } from 'next-auth';
 
 import { compare } from 'bcryptjs';
 
-import { User as UserType } from '@/generated/prisma/client';
-
 // Import the singleton instance of PrismaClient
 import prisma from 'database';
 // DO NOT CREATE A NEW INSTANCE FOR EACH REQUEST

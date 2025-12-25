@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactVideoComponent from './ReactVideoComponent';
 import ReactChessBoardComponent from './ReactChessBoardComponent';
 import { SerializableCourse } from '@/types/index'
-import dynamic from 'next/dynamic';
+
 
 const ReactViewCourseComponent: React.FC<{ course: SerializableCourse }> = ({ course }) => {
     // Index of the currently selected FEN from the course.keyPositions array

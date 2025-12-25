@@ -6,6 +6,7 @@ import prisma from 'database';
 import AdminLayout from '@/components/admin/ReactAdminLayout';
 import { ReactAdminUserListComponent } from '@/components/admin/ReactAdminUserListComponent';
 import { SerializableCourse, SerializableUser } from '@/types/index';
+import { User as UserType } from 'database/prisma/generated/prisma/client';
 
 
 type ManageUsersPageProps = {
@@ -49,11 +50,11 @@ export const getServerSideProps: GetServerSideProps<ManageUsersPageProps> = asyn
     const pageQuery = context.params?.page as string[] | undefined;
     const page = pageQuery ? parseInt(pageQuery[0], 10) : 1;
     const pageSize = 10;
-    const users = await prisma.user.findMany({
-                        skip: (page - 1) * pageSize,
-                        take: pageSize,
-                        orderBy: { name: 'asc' }
-                    });
+    const users : UserType[] = await prisma.user.findMany({
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+        orderBy: { name: 'asc' }
+    });
     const totalUsers = await prisma.user.count();
     const serializableUsers = users.map(user => ({
                                     ...user,
