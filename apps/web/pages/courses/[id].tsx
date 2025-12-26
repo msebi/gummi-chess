@@ -5,20 +5,8 @@ import ReactViewCourseComponent from '@/components/ReactViewCourseComponent';
 import ReactFooterComponent from '@/components/ReactFooterComponent';
 
 
-import { Course as CourseType, KeyPosition, Rating as RatingType } from 'database/prisma/generated/prisma/client';
+import { SerializableCourse } from '@/types/index'
 
-// TODO: verify/adjust
-export type CourseWithRelations = CourseType & {
-    tags: { tag: { id: string; name: string } }[];
-    keyPositions: KeyPosition[];
-};
-
-export type SerializableCourse = Omit<CourseWithRelations, 'price' | 'createdAt' | 'updatedAt'> & {
-    price: number;
-    createdAt: string;
-    updatedAt: string;
-    ratings: RatingType[]
-};
 
 // Step 1: Tell next.js which course pages to pre-render at build time
 export const getStaticPaths: GetStaticPaths = async () => {

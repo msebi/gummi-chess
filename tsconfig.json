@@ -42,6 +42,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "types/**/*.d.ts" // Ensure custom declarations are included
-  ],
+, "apps/web/next.config.mjs"  ],
   "exclude": ["node_modules"]
 }
